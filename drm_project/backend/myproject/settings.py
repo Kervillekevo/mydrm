@@ -141,4 +141,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # for dev
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 
