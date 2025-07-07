@@ -50,7 +50,7 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
 
         if user:
-            # ✅ Create or get existing token for the user
+            
             token, created = Token.objects.get_or_create(user=user)
 
             return Response({
@@ -88,21 +88,29 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
         email = serializer.validated_data['email']
 
         user = User.objects.filter(email=email).first()
-        if user:
-            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
-            token = PasswordResetTokenGenerator().make_token(user)
-            reset_url = f"http://localhost:8000/api/password-reset-confirm/?uidb64={uidb64}&token={token}"
 
-            # Send email
+        if user:
+            uidb64 = urlsafe_base64_encode(smart_bytes(user.pk))
+            token = PasswordResetTokenGenerator().make_token(user)
+
+            reset_url = f"http://localhost:3000/reset-password/{uidb64}/{token}/"
+
+            #  Debug: print to console to confirm
+            print('✅ RESET URL:', reset_url)
+
+            
             send_mail(
                 subject='Password Reset Request',
-                message=f'Click the link to reset your password: {reset_url}',
+                message=f'Hi {user.username},\n\nClick the link to reset your password:\n{reset_url}\n\nIf you did not request this, please ignore.',
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[email],
                 fail_silently=False,
             )
 
-        return Response({'success': 'If your email exists, we sent a password reset link.'}, status=status.HTTP_200_OK)
+        return Response(
+            {'success': 'If your email exists, we sent a password reset link.'},
+            status=status.HTTP_200_OK
+        )
 class PasswordTokenCheckAPI(APIView):
     def get(self, request, uidb64, token):
         try:
@@ -120,27 +128,21 @@ class PasswordTokenCheckAPI(APIView):
 class PasswordResetConfirm(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
-    def post(self, request):
-        uidb64 = request.data.get('uidb64')
-        token = request.data.get('token')
+    def post(self, request, uidb64, token):
         password = request.data.get('password')
 
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
-            print("User found:", user.username)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             return Response({'error': 'Invalid UID'}, status=status.HTTP_400_BAD_REQUEST)
 
         if not PasswordResetTokenGenerator().check_token(user, token):
             return Response({'error': 'The reset link is invalid or expired.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        print("Token is valid for user:", user.username)
-
         user.set_password(password)
         user.save()
 
-        print("Password reset and saved!")
-
         return Response({'success': 'Password reset successful!'}, status=status.HTTP_200_OK)
+
 
