@@ -116,25 +116,31 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const requestPasswordReset = async (email) => {
-    const res = await fetch(`${BASE_URL}/password-reset/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
+ const requestPasswordReset = async (email) => {
+  console.log('Sending email:', email);
+  const res = await fetch(`${BASE_URL}/password-reset/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
 
-    if (res.ok) {
-      alert('Password reset link sent. Check your email.');
-    } else {
-      alert('Error sending reset link.');
-    }
-  };
+  const result = await res.text();
+  console.log('Status:', res.status);
+  console.log('Response:', result);
+
+  if (res.ok) {
+    alert('Password reset link sent. Check your email.');
+  } else {
+    alert('Error sending reset link.');
+  }
+};
+
 
   const passwordResetConfirm = async (uidb64, tokenValue, password) => {
-    const res = await fetch(`${BASE_URL}/password-reset-confirm/`, {
+    const res = await fetch(`${BASE_URL}/password-reset-confirm/${uidb64}/${tokenValue}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uidb64, token: tokenValue, password }),
+      body: JSON.stringify({ password }),
     });
 
     if (res.ok) {

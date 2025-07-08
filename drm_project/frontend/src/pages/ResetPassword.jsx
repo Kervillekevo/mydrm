@@ -1,9 +1,12 @@
+// ✅ pages/ResetPassword.jsx
+
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
 export default function ResetPassword() {
+  // ✅ Must match Django URL pattern: <uidb64>/<token>/
   const { uidb64, token } = useParams();
   const navigate = useNavigate();
 
@@ -22,15 +25,19 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/password-reset-confirm/${uidb64}/${token}/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          uidb64,
-          token,
-          password: newPassword,
-        }),
-      });
+const response = await fetch(
+  `${BASE_URL}/password-reset-confirm/${uidb64}/${token}/`,
+  {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      password: newPassword,
+      token: token,      // ✅ Include it here
+      uidb64: uidb64,    // ✅ Include it here too
+    }),
+  }
+);
+
 
       const data = await response.json();
       console.log('Status:', response.status);
@@ -38,9 +45,9 @@ export default function ResetPassword() {
 
       if (response.ok) {
         alert('✅ Password reset successful! Please log in.');
-        navigate('/'); 
+        navigate('/login');
       } else {
-        alert('❌ Error: ' + JSON.stringify(data));
+        alert('❌ Error: ' + (data.error || JSON.stringify(data)));
       }
     } catch (error) {
       console.error('Fetch error:', error);
