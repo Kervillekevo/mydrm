@@ -126,5 +126,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kelvinngui00@gmail.com'  # <-- Replace this with your Gmail
 EMAIL_HOST_PASSWORD = 'tssf uoui fmat muwc'  # <-- We'll create this below
 
-DEFAULT_FROM_EMAIL = 'kelvinngui00l@gmail.com'
+DEFAULT_FROM_EMAIL = 'kelvinngui00@gmail.com'
 
