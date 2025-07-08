@@ -12,7 +12,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/reset-password/:uid/:token/" element={<ResetPassword />} />
+          <Route path="/reset-password/:uidb64/:token/" element={<ResetPassword />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
