@@ -25,10 +25,22 @@ class RegisterSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.EmailField(source='user.email', read_only=True)
+    remove_photo = serializers.BooleanField(write_only=True, required=False)
 
     class Meta:
         model = Profile
-        fields = ['username', 'email', 'bio', 'phone', 'profile_photo']
+        fields = ['username', 'email', 'bio', 'phone', 'profile_photo', 'remove_photo']
+
+    def update(self, instance, validated_data):
+        if validated_data.pop('remove_photo', False):
+            instance.profile_photo.delete(save=False)
+            instance.profile_photo = None
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
