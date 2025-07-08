@@ -1,12 +1,10 @@
-// pages/ResetPassword.jsx
-
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
 export default function ResetPassword() {
-  const { uid, token } = useParams();
+  const { uidb64, token } = useParams();
   const navigate = useNavigate();
 
   const [newPassword, setNewPassword] = useState('');
@@ -24,34 +22,33 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${BASE_URL}/password-reset-confirm/${uid}/${token}/`, {
+      const response = await fetch(`${BASE_URL}/password-reset-confirm/${uidb64}/${token}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          uid: uid,
-          token: token,
-          new_password1: newPassword,
-          new_password2: confirmPassword,
+          uidb64,
+          token,
+          password: newPassword,
         }),
       });
 
-      const data = await res.json();
-      console.log('Response status:', res.status);
-      console.log('Response body:', data);
+      const data = await response.json();
+      console.log('Status:', response.status);
+      console.log('Data:', data);
 
-      if (res.ok) {
-        alert('Password reset successful! You can now sign in.');
-        navigate('/');
+      if (response.ok) {
+        alert('✅ Password reset successful! Please log in.');
+        navigate('/'); 
       } else {
-        alert('Error: ' + JSON.stringify(data));
+        alert('❌ Error: ' + JSON.stringify(data));
       }
     } catch (error) {
       console.error('Fetch error:', error);
-      alert('Something went wrong. Check console for details.');
+      alert('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
-  }; 
+  };
 
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto' }}>
@@ -77,4 +74,4 @@ export default function ResetPassword() {
       </form>
     </div>
   );
-}  
+}
