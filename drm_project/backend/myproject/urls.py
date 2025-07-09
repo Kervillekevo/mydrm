@@ -30,5 +30,6 @@ def get_csrf(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
+     path('', include('videos.urls')),
      path("csrf/", get_csrf),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
