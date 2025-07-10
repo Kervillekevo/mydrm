@@ -23,6 +23,7 @@ INSTALLED_APPS = [
 
     'users',
     'videos',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -116,6 +117,18 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
+
+Q_CLUSTER = {
+    'name': 'mydrm',
+    'workers': 4,
+    'recycle': 500,
+    'timeout': 60,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default',  # Use Django ORM for broker
+}
+
 
 # ✅ Use Gmail SMTP backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
