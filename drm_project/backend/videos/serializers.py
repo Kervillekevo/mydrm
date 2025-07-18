@@ -9,14 +9,26 @@ class VideoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Video
-        fields = ['id', 'uploaded_file', 'status', 'hls_url', 'key_url']
+        fields = ['id',
+                  'title',
+                  'description',
+                  'uploaded_file',
+                  'status',
+                  'hls_output_dir',
+                  'aes_key_path',
+                  'hls_url',
+                  'key_url'
+                  ]
 
     def get_hls_url(self, obj):
         if obj.status == 'ready':
-            return f"/media/{obj.hls_output_dir}/master.m3u8"
+            # Use the model method for consistency
+            return obj.hls_master_playlist_url()
         return None
 
     def get_key_url(self, obj):
         if obj.status == 'ready':
-            return f"/videos/key/{obj.id}.key"
+            # !!! THIS IS THE CRITICAL CHANGE !!!
+            # Use the model method which now returns the correct URL
+            return obj.aes_key_url()
         return None

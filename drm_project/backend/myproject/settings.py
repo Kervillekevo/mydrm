@@ -85,6 +85,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -122,8 +124,8 @@ Q_CLUSTER = {
     'name': 'mydrm',
     'workers': 4,
     'recycle': 500,
-    'timeout': 60,
-    'retry': 120,
+    'timeout': 3600,
+    'retry': 7200,
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default',  # Use Django ORM for broker
@@ -140,4 +142,7 @@ EMAIL_HOST_USER = 'kelvinngui00@gmail.com'  # <-- Replace this with your Gmail
 EMAIL_HOST_PASSWORD = 'tssf uoui fmat muwc'  # <-- We'll create this below
 
 DEFAULT_FROM_EMAIL = 'kelvinngui00@gmail.com'
+# ✅ Ensure .ts files are served with the correct MIME type
+import mimetypes
+mimetypes.add_type("video/mp2t", ".ts", True)
 

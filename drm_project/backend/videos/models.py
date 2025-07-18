@@ -1,11 +1,9 @@
-# models.py
-
 import uuid
 from django.db import models
 from django.conf import settings
+from django_q.tasks import async_task
 
 def video_upload_path(instance, filename):
-    # Uploaded original videos: media/videos/original/<uuid>/<filename>
     return f"videos/original/{instance.id}/{filename}"
 
 class Video(models.Model):
@@ -15,7 +13,7 @@ class Video(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='videos',
-        null=True,  # Required only if you want anonymous videos allowed
+        null=True,
         blank=True
     )
 
@@ -24,10 +22,7 @@ class Video(models.Model):
 
     uploaded_file = models.FileField(upload_to=video_upload_path)
 
-    # HLS segments & playlists: stored in media/videos/hls/<uuid>/
     hls_output_dir = models.CharField(max_length=500, blank=True)
-
-    # AES-128 key file: stored in media/videos/keys/<uuid>.key
     aes_key_path = models.CharField(max_length=500, blank=True)
 
     STATUS_CHOICES = [
@@ -46,7 +41,11 @@ class Video(models.Model):
         return f"{self.title} ({self.id})"
 
     def hls_master_playlist_url(self):
-        return f"/videos/stream/{self.id}/master.m3u8"
+    # Assuming MEDIA_URL is '/media/' and the output is under videos/hls/
+     return f"{settings.MEDIA_URL}videos/hls/{self.id}/master.m3u8"
 
     def aes_key_url(self):
-        return f"/videos/key/{self.id}.key"
+    # This must match urls.py for the serve_aes_key view
+        return f"/media/videos/hls/{self.id}.key"
+
+   
