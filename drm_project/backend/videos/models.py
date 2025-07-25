@@ -1,14 +1,15 @@
 import uuid
+import os
 from django.db import models
 from django.conf import settings
-from django_q.tasks import async_task
+from django.urls import reverse
 
 def video_upload_path(instance, filename):
     return f"videos/original/{instance.id}/{filename}"
 
 class Video(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -41,11 +42,15 @@ class Video(models.Model):
         return f"{self.title} ({self.id})"
 
     def hls_master_playlist_url(self):
-    # Assuming MEDIA_URL is '/media/' and the output is under videos/hls/
-     return f"{settings.MEDIA_URL}videos/hls/{self.id}/master.m3u8"
+        return reverse('serve_master_playlist', kwargs={'video_id': self.id})
 
     def aes_key_url(self):
-    # This must match urls.py for the serve_aes_key view
-        return f"/media/videos/hls/{self.id}.key"
+        """
+        Return the URL to serve the AES key file from videos/keys/<video_id>.key
+        """
+        if self.aes_key_path:
+            return reverse('serve_aes_key', kwargs={'video_id': self.id})
+        return ""
 
-   
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)

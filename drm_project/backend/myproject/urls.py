@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 # Only import the views you need
-from videos.views import serve_aes_key, serve_hls_segment, serve_hls_playlist
+from videos.views import serve_aes_key, serve_hls_segment, serve_hls_playlist, serve_master_playlist 
 
 @ensure_csrf_cookie
 def get_csrf(request):
@@ -20,7 +20,7 @@ urlpatterns = [
     
     # HLS media serving URLs (token-auth protected in views)
     path(
-        'media/videos/hls/<uuid:video_id>/<uuid:key_id>.key',  # ✅ key_id accepted
+        'media/videos/hls/<uuid:video_id>.key',  # ✅ key_id accepted
         serve_aes_key,
         name='serve_aes_key'
     ),
@@ -34,6 +34,12 @@ urlpatterns = [
         serve_hls_playlist,
         name='serve_hls_playlist'
     ),
+    path(
+    'media/videos/hls/<uuid:video_id>/master.m3u8',
+    serve_master_playlist,
+    name='serve_master_playlist'
+),
+
 ]
 
 # Serve media files in development (includes .m3u8 and .ts from MEDIA_ROOT)
