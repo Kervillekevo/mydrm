@@ -1,20 +1,19 @@
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../components/AuthContext';
+import { useEffect, useState } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
+import './Videos.css';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
 export default function Videos() {
-  const { token } = useContext(AuthContext);
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
+        const token = localStorage.getItem('token'); // safe for both logged-in and guest
         const res = await fetch(`${BASE_URL}/videos/`, {
-          headers: {
-            'Authorization': `Token ${token}`,
-          },
+          headers: token ? { Authorization: `Token ${token}` } : {},
         });
         if (res.ok) {
           const data = await res.json();
@@ -24,24 +23,42 @@ export default function Videos() {
         }
       } catch (err) {
         console.error('Error:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (token) {
-      fetchVideos();
-    }
-  }, [token]);
+    fetchVideos(); // always run, regardless of login
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="page-container">
+        <h1 className="page-title">Available Videos</h1>
+        <p style={{ color: '#ccc', padding: '16px' }}>Loading videos...</p>
+      </div>
+    );
+  }
+
+  if (!videos.length) {
+    return (
+      <div className="page-container">
+        <h1 className="page-title">Available Videos</h1>
+        <p style={{ color: '#ccc', padding: '16px' }}>No videos found.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Available Videos</h1>
-      {videos.map((video) => (
-        <div key={video.id} className="mb-8 border-b pb-4">
-          <h2 className="text-xl font-semibold">{video.title}</h2>
-          <p className="text-gray-600 mb-2">{video.description}</p>
-          <VideoPlayer videoId={video.id} />
-        </div>
-      ))}
+    <div className="page-container">
+      <h1 className="page-title">Available Videos</h1>
+      <div className="video-grid">
+        {videos.map((video) => (
+          <div key={video.id} className="video-card">
+            <VideoPlayer videoId={video.id} title={video.title} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

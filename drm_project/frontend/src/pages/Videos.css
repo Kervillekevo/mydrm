@@ -1,0 +1,65 @@
+/* src/pages/videos.css */
+
+/* Page background and layout */
+.page-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  background-color: #0f0f0f;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Page title */
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 20px;
+  padding-left: 4px;
+}
+
+/* Grid layout for videos */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  padding: 16px;
+  gap: 20px;
+}
+
+/* Individual video card (like YouTube video box) */
+.video-card {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.08);
+}
+
+/* Video description */
+.video-description {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.5;
+  border-top: 1px solid #2c2c2c;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .page-title {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .video-description {
+    font-size: 13px;
+  }
+}
