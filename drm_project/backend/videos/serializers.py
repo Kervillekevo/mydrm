@@ -14,8 +14,6 @@ class VideoSerializer(serializers.ModelSerializer):
                   'description',
                   'uploaded_file',
                   'status',
-                  'hls_output_dir',
-                  'aes_key_path',
                   'hls_url',
                   'key_url'
                   ]

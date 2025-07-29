@@ -1,18 +1,46 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django_q.tasks import async_task  # ✅ Required for background processing
-
+from django.utils.timezone import localtime
 from .models import Video
+
+from django.contrib.admin import SimpleListFilter
+
+class UploadMonthFilter(SimpleListFilter):
+    title = 'Upload Month'
+    parameter_name = 'upload_month'
+
+    def lookups(self, request, model_admin):
+        months = Video.objects.dates('created_at', 'month', order='DESC')
+        return [(m.strftime('%Y-%m'), m.strftime('%B %Y')) for m in months]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            year, month = self.value().split('-')
+            return queryset.filter(created_at__year=year, created_at__month=month)
+
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('title', 'owner', 'status', 'views', 'created_at', 'aes_key_link')
     search_fields = ('title', 'owner__username',)
     readonly_fields = ('video_preview', 'stream_link', 'aes_key_link')
+    list_filter = (UploadMonthFilter,)
+    actions = ['delete_selected_month_videos']
+
+    @admin.action(description='🗑️ Delete Videos in This Month')
+    def delete_selected_month_videos(self, request, queryset):
+        count = queryset.count()
+        if count == 0:
+            self.message_user(request, "⚠️ No videos selected.", level='warning')
+        else:
+            queryset.delete()
+            self.message_user(request, f"✅ {count} videos deleted from selected month.")
+
 
     fieldsets = (
         ('Video Details', {
-            'fields': ('owner', 'title', 'description', 'uploaded_file', 'video_preview')
+            'fields': ('owner', 'title', 'uploaded_file', 'video_preview')
         }),
         ('Processing & Output', {
             'fields': ('hls_output_dir', 'aes_key_path', 'status', 'stream_link', 'aes_key_link')
@@ -58,3 +86,5 @@ class VideoAdmin(admin.ModelAdmin):
         return "Not ready yet."
 
     aes_key_link.short_description = "AES Key Link"
+
+

@@ -122,10 +122,10 @@ REST_FRAMEWORK = {
 
 Q_CLUSTER = {
     'name': 'mydrm',
-    'workers': 4,
+    'workers': 4,# 4 concurrent workers
     'recycle': 500,
-    'timeout': 3600,
-    'retry': 7200,
+    'timeout': 3600,#one hour for video processing jobs
+    'retry': 7200,#retry failed jobs for 2 hours
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default',  # Use Django ORM for broker

@@ -1,5 +1,6 @@
 import uuid
 import os
+import base64
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
@@ -42,14 +43,15 @@ class Video(models.Model):
         return f"{self.title} ({self.id})"
 
     def hls_master_playlist_url(self):
-        return reverse('serve_master_playlist', kwargs={'video_id': self.id})
+        raw_url = reverse('serve_master_playlist', kwargs={'video_id': self.id})
+        encoded = base64.urlsafe_b64encode(raw_url.encode()).decode()
+        return f"/secure/hls/{encoded}"
 
     def aes_key_url(self):
-        """
-        Return the URL to serve the AES key file from videos/keys/<video_id>.key
-        """
         if self.aes_key_path:
-            return reverse('serve_aes_key', kwargs={'video_id': self.id})
+            raw_url = reverse('serve_aes_key', kwargs={'video_id': self.id})
+            encoded = base64.urlsafe_b64encode(raw_url.encode()).decode()
+            return f"/secure/key/{encoded}"
         return ""
 
     def save(self, *args, **kwargs):

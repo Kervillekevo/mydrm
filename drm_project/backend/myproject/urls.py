@@ -5,8 +5,14 @@ from django.conf.urls.static import static
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-# Only import the views you need
-from videos.views import serve_aes_key, serve_hls_segment, serve_hls_playlist, serve_master_playlist 
+# Views from videos app
+from videos.views import (
+    serve_aes_key,
+    serve_hls_segment,
+    serve_hls_playlist,
+    serve_master_playlist,
+    secure_file_response
+)
 
 @ensure_csrf_cookie
 def get_csrf(request):
@@ -17,31 +23,23 @@ urlpatterns = [
     path('', include('users.urls')),
     path('videos/', include('videos.urls')),
     path("csrf/", get_csrf),
-    
-    # HLS media serving URLs (token-auth protected in views)
-    path(
-        'media/videos/hls/<uuid:video_id>.key',  # ✅ key_id accepted
-        serve_aes_key,
-        name='serve_aes_key'
-    ),
-    path(
-        'media/videos/hls/<uuid:video_id>/<str:quality>/<str:segment_name>.ts',
-        serve_hls_segment,
-        name='serve_hls_segment'
-    ),
-    path(
-        'media/videos/hls/<uuid:video_id>/<str:quality>/playlist.m3u8',
-        serve_hls_playlist,
-        name='serve_hls_playlist'
-    ),
-    path(
-    'media/videos/hls/<uuid:video_id>/master.m3u8',
-    serve_master_playlist,
-    name='serve_master_playlist'
-),
 
+    # ✅ Media routes
+    path('media/videos/hls/<uuid:video_id>.key', serve_aes_key, name='serve_aes_key'),
+    path('media/videos/hls/<uuid:video_id>/master.m3u8', serve_master_playlist, name='serve_master_playlist'),
+    path('media/videos/hls/<uuid:video_id>/<str:quality>/playlist.m3u8', serve_hls_playlist, name='serve_hls_playlist'),
+    path('media/videos/hls/<uuid:video_id>/<str:quality>/<str:segment_name>.ts', serve_hls_segment, name='serve_hls_segment'),
+
+    # ✅ Secure direct path access
+    path('secure/hls/<str:encoded_path>', secure_file_response, name='secure_file_response'),
+
+    # ✅ Secure /secure/hls/<video_id>/... variant paths (REQUIRED by your frontend)
+    path('secure/hls/<uuid:video_id>.key', serve_aes_key, name='secure_serve_aes_key'),
+    path('secure/hls/<uuid:video_id>/master.m3u8', serve_master_playlist, name='secure_serve_master_playlist'),
+    path('secure/hls/<uuid:video_id>/<str:quality>/playlist.m3u8', serve_hls_playlist, name='secure_serve_hls_playlist'),
+    path('secure/hls/<uuid:video_id>/<str:quality>/<str:segment_name>.ts', serve_hls_segment, name='secure_serve_hls_segment'),
 ]
 
-# Serve media files in development (includes .m3u8 and .ts from MEDIA_ROOT)
+# ✅ Serve HLS & media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
