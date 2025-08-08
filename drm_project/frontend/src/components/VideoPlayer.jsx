@@ -16,91 +16,140 @@ export default function VideoPlayer({ videoId, title }) {
   const playerRef = useRef(null);
 
   const [hlsUrl, setHlsUrl] = useState(null);
+  const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchVideo = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const token = localStorage.getItem('token');
+  const fetchVideo = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${BASE_URL}/videos/${videoId}/`, {
+        headers: token ? { Authorization: `Token ${token}` } : {},
+      });
 
-        const response = await fetch(`${BASE_URL}/videos/${videoId}/`, {
-          headers: token ? { Authorization: `Token ${token}` } : {},
-        });
+      if (!res.ok) throw new Error('Video not available');
 
-        if (!response.ok) {
-          throw new Error(`Video not found (HTTP ${response.status})`);
-        }
+      const data = await res.json();
+      if (!data.hls_url) throw new Error('HLS not ready yet');
 
-        const data = await response.json();
-
-        if (!data.hls_url) {
-          throw new Error("This video is not ready for playback yet.");
-        }
-
-        setHlsUrl(`${BASE_URL}${data.hls_url}`);
-      } catch (err) {
-        setError(err.message);
-        setHlsUrl(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchVideo();
-  }, [videoId]);
-
-  useEffect(() => {
-    if (!hlsUrl || !videoRef.current) return;
-
-    if (playerRef.current) {
-      playerRef.current.dispose();
+      const fullUrl = `${BASE_URL}${data.hls_url}`;
+      setHlsUrl(fullUrl);
+      setStatus(data.status);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const initPlayer = (url) => {
+    if (!videoRef.current) return;
 
     const player = videojs(videoRef.current, {
       controls: true,
+      autoplay: false,
       preload: 'auto',
       responsive: true,
       fluid: true,
-      bigPlayButton: true,
       html5: {
         vhs: {
           overrideNative: true,
-          enableLowInitialPlaylist: true,
         },
       },
     });
 
     playerRef.current = player;
 
-    player.src({
-      src: hlsUrl,
-      type: 'application/x-mpegURL',
-    });
+    player.src({ src: url, type: 'application/x-mpegURL' });
 
     player.ready(() => {
-      try {
+      if (!player.controlBar.getChild('QualitySelector')) {
         player.hlsQualitySelector({ displayCurrentQuality: true });
-      } catch (e) {
-        console.warn('HLS quality plugin failed:', e);
       }
     });
 
     player.on('error', () => {
-      const err = player.error();
-      setError(err?.message || 'Playback error');
+      setError(player.error()?.message || 'Playback error');
     });
+
+    return player;
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchVideo();
+  }, [videoId]);
+
+  // Initialize player
+  useEffect(() => {
+    if (hlsUrl && !playerRef.current) {
+      initPlayer(hlsUrl);
+    }
+  }, [hlsUrl]);
+
+  // Polling for status change (e.g. partial_ready → ready)
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${BASE_URL}/videos/${videoId}/`, {
+          headers: token ? { Authorization: `Token ${token}` } : {},
+        });
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const newStatus = data.status;
+
+        if (newStatus !== status && data.hls_url) {
+          console.log(`🔄 Status changed: ${status} → ${newStatus}`);
+          setStatus(newStatus);
+
+          const player = playerRef.current;
+          if (player) {
+            const currentTime = player.currentTime();
+            const wasPaused = player.paused();
+
+            // Force reload with cache-busting timestamp
+            const updatedUrl = `${BASE_URL}${data.hls_url}?t=${Date.now()}`;
+            player.src({ src: updatedUrl, type: 'application/x-mpegURL' });
+
+            player.one('loadedmetadata', () => {
+              player.currentTime(currentTime);
+              if (!wasPaused) player.play();
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Polling error:', err.message);
+      }
+    }, 8000); // Poll every 8 seconds
+
+    return () => clearInterval(interval);
+  }, [videoId, status]);
+
+  // Cleanup
+  useEffect(() => {
+
+   const videoEl = videoRef.current;
+
+   const disableContextMenu = (e) => e.preventDefault();
+
+   if (videoEl) {
+     videoEl.addEventListener('contextmenu', disableContextMenu);
+  }
 
     return () => {
       if (playerRef.current) {
         playerRef.current.dispose();
         playerRef.current = null;
       }
+      if (videoEl) {
+        videoEl.removeEventListener('contextmenu', disableContextMenu);
+    }
     };
-  }, [hlsUrl]);
-
+  }, []);
+ 
   return (
     <div className="video-wrapper">
       <div className="video-container">
@@ -113,15 +162,15 @@ export default function VideoPlayer({ videoId, title }) {
         </div>
       </div>
 
-      {loading && (
-        <div className="video-loading">Loading video...</div>
-      )}
+      {loading && <div className="video-loading">Loading...</div>}
 
       {error && (
         <div className="video-error">
           ⚠ {error}
-          <br />
-          <button onClick={() => window.location.reload()} className="retry-button">
+          <button
+            onClick={() => window.location.reload()}
+            className="retry-button"
+          >
             Retry
           </button>
         </div>
