@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'users',
     'videos',
     'django_q',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
+
 
 DATABASES = {
     'default': {
@@ -120,16 +122,63 @@ REST_FRAMEWORK = {
     ],
 }
 
+# Add this to your settings.py
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'videos': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django_q': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# Also update your Q_CLUSTER for better debugging
 Q_CLUSTER = {
     'name': 'mydrm',
-    'workers': 4,# 4 concurrent workers
+    'workers': 1,  # Use only 1 worker for debugging
     'recycle': 500,
-    'timeout': 3600,#one hour for video processing jobs
-    'retry': 7200,#retry failed jobs for 2 hours
+    'timeout': 3600,
+    'retry': 3600,
     'queue_limit': 50,
     'bulk': 10,
-    'orm': 'default',  # Use Django ORM for broker
+    'orm': 'default',
+      'worker_class': 'q.cluster.ThreadWorker',
+    'save_limit': 250,  # Keep more task results for debugging
+    'catch_up': False,  # Don't process old tasks
 }
+
+# Allow large file uploads
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB
+
 
 
 # ✅ Use Gmail SMTP backend

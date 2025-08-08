@@ -13,6 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django.http import HttpResponseRedirect
 
+from django.views.decorators.clickjacking import xframe_options_exempt
+from django.template.loader import render_to_string
+
 from rest_framework.permissions import AllowAny
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -30,25 +33,83 @@ logger = logging.getLogger(__name__)
 @authentication_classes([])
 @permission_classes([AllowAny])
 def serve_aes_key(request, video_id):
-    logger.debug("🔑 AES key request | User: %s | Auth: %s", request.user, request.auth)
-
-    video = get_object_or_404(Video, id=video_id)
-
-    # Build the absolute path to the AES key (e.g., MEDIA_ROOT/videos/keys/<video_id>.key)
-    key_path = os.path.join(settings.MEDIA_ROOT, video.aes_key_path)
-    logger.debug("🔑 Looking for AES key at: %s", key_path)
-
-    if os.path.exists(key_path):
-        with open(key_path, 'rb') as f:
-            key_data = f.read()
-
-        response = HttpResponse(key_data, content_type='application/octet-stream')
-        response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-        response['Access-Control-Allow-Credentials'] = 'true'
-        return response
-
-    logger.error("❌ Key file not found: %s", key_path)
-    raise Http404("Key not found")
+    logger.info("🔑 DEBUG: AES key request for video_id: %s", video_id)
+    
+    try:
+        video = get_object_or_404(Video, id=video_id)
+        logger.info("✅ DEBUG: Video found - status: %s", video.status)
+        logger.info("✅ DEBUG: Video.aes_key_path: %s", video.aes_key_path)
+        
+        # Check multiple possible locations
+        possible_paths = [
+            # Where your processing puts it (parent HLS dir)
+            os.path.join(settings.MEDIA_ROOT, 'videos', 'hls', f'{video_id}.key'),
+            # Where your processing puts it (video-specific HLS dir)  
+            os.path.join(settings.MEDIA_ROOT, 'videos', 'hls', str(video_id), f'{video_id}.key'),
+            # Where your model says it should be
+            os.path.join(settings.MEDIA_ROOT, video.aes_key_path) if video.aes_key_path else None,
+            # Original keys directory
+            os.path.join(settings.MEDIA_ROOT, 'videos', 'keys', f'{video_id}.key'),
+        ]
+        
+        # Remove None values
+        possible_paths = [p for p in possible_paths if p]
+        
+        logger.info("🔍 DEBUG: Checking these paths:")
+        for i, path in enumerate(possible_paths):
+            exists = os.path.exists(path)
+            logger.info("   %d. %s - EXISTS: %s", i+1, path, exists)
+            if exists:
+                try:
+                    file_size = os.path.getsize(path)
+                    logger.info("      File size: %d bytes", file_size)
+                except Exception as e:
+                    logger.error("      Error getting file size: %s", e)
+        
+        # Try each path
+        for path in possible_paths:
+            if os.path.exists(path):
+                logger.info("✅ DEBUG: Using key from: %s", path)
+                try:
+                    with open(path, 'rb') as f:
+                        key_data = f.read()
+                    
+                    logger.info("✅ DEBUG: Successfully read %d bytes", len(key_data))
+                    
+                    response = HttpResponse(key_data, content_type='application/octet-stream')
+                    response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+                    response['Access-Control-Allow-Credentials'] = 'true'
+                    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+                    return response
+                except Exception as e:
+                    logger.error("❌ DEBUG: Error reading key file %s: %s", path, str(e))
+                    continue
+        
+        # If we get here, no key was found
+        logger.error("❌ DEBUG: No key file found in any location!")
+        
+        # Let's also check what directories exist
+        hls_base = os.path.join(settings.MEDIA_ROOT, 'videos', 'hls')
+        if os.path.exists(hls_base):
+            logger.info("📁 DEBUG: HLS base directory contents:")
+            try:
+                for item in os.listdir(hls_base):
+                    item_path = os.path.join(hls_base, item)
+                    is_dir = os.path.isdir(item_path)
+                    logger.info("   - %s %s", item, "(DIR)" if is_dir else "(FILE)")
+            except Exception as e:
+                logger.error("   Error reading HLS directory: %s", e)
+        else:
+            logger.error("📁 DEBUG: HLS base directory doesn't exist: %s", hls_base)
+        
+        raise Http404("Key not found")
+        
+    except Video.DoesNotExist:
+        logger.error("❌ DEBUG: Video with id %s not found", video_id)
+        raise Http404("Video not found")
+    except Exception as e:
+        logger.error("❌ DEBUG: Unexpected error: %s", str(e))
+        raise Http404("Internal error")
 
 
 @api_view(['GET'])
@@ -137,7 +198,7 @@ def serve_master_playlist(request, video_id):
                 ])
                 logger.info(f"✅ Added {variant['quality']} variant")
             else:
-                logger.warning(f"⚠️ Missing {variant['quality']} at {variant_path}")
+                logger.warning(f"⚠ Missing {variant['quality']} at {variant_path}")
 
         if len([l for l in playlist_lines if 'EXT-X-STREAM-INF' in l]) == 0:
             logger.error(f"❌ No variants found for video {video_id}")
@@ -185,6 +246,22 @@ def secure_file_response(request: HttpRequest, encoded_path: str):
         logger.error(f"❌ Failed to decode secure URL: {str(e)}")
         raise Http404("Invalid or corrupted secure URL")
     
+
+@xframe_options_exempt
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def embed_video(request, video_id):
+    video = get_object_or_404(Video, id=video_id)
+    return HttpResponse(
+        render_to_string("videos/embed.html", {
+            'video': video,
+            'master_playlist_url': f"/secure/hls/{video.id}/master.m3u8",
+            'token': request.GET.get("token", ""),
+        }),
+        content_type="text/html"
+    )
+  
 class VideoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer

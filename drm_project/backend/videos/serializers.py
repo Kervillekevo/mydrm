@@ -15,18 +15,16 @@ class VideoSerializer(serializers.ModelSerializer):
                   'uploaded_file',
                   'status',
                   'hls_url',
-                  'key_url'
+                  'key_url',
+                  
                   ]
 
     def get_hls_url(self, obj):
-        if obj.status == 'ready':
-            # Use the model method for consistency
-            return obj.hls_master_playlist_url()
-        return None
+     if obj.status in ['partial_ready', 'ready']:
+        return obj.hls_master_playlist_url()
+     return None
 
     def get_key_url(self, obj):
-        if obj.status == 'ready':
-            # !!! THIS IS THE CRITICAL CHANGE !!!
-            # Use the model method which now returns the correct URL
-            return obj.aes_key_url()
-        return None
+      if obj.status in ['partial_ready', 'ready']:
+        return obj.aes_key_url()
+      return None

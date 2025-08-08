@@ -24,7 +24,7 @@ class UploadMonthFilter(SimpleListFilter):
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('title', 'owner', 'status', 'views', 'created_at', 'aes_key_link')
     search_fields = ('title', 'owner__username',)
-    readonly_fields = ('video_preview', 'stream_link', 'aes_key_link')
+    readonly_fields = ('video_preview', 'stream_link', 'aes_key_link', 'embed_code')
     list_filter = (UploadMonthFilter,)
     actions = ['delete_selected_month_videos']
 
@@ -48,6 +48,9 @@ class VideoAdmin(admin.ModelAdmin):
         ('Analytics', {
             'fields': ('views',)
         }),
+        ('Embed', {
+            'fields':('embed_code',)
+        })
     )
 
     def save_model(self, request, obj, form, change):
@@ -70,6 +73,7 @@ class VideoAdmin(admin.ModelAdmin):
         return "No video uploaded yet."
 
     video_preview.short_description = "Preview"
+    
 
     def stream_link(self, obj):
         if obj.status == 'ready':
@@ -86,5 +90,20 @@ class VideoAdmin(admin.ModelAdmin):
         return "Not ready yet."
 
     aes_key_link.short_description = "AES Key Link"
+
+
+    def embed_code(self, obj):
+      if obj.status != 'ready':
+        return "Embed available when video is ready."
+    
+      embed_url = f"http://localhost:8000{obj.get_embed_url()}"
+      return mark_safe(
+        f"<textarea rows='3' cols='60' readonly>"
+        f"<iframe src='{embed_url}' width='640' height='360' "
+        f"frameborder='0' allowfullscreen></iframe></textarea>"
+    )
+
+    embed_code.short_description = "Embed Code"
+
 
 

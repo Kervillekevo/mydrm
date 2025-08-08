@@ -4,6 +4,8 @@ import base64
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django.utils import timezone
+
 
 def video_upload_path(instance, filename):
     return f"videos/original/{instance.id}/{filename}"
@@ -30,12 +32,14 @@ class Video(models.Model):
     STATUS_CHOICES = [
         ('uploaded', 'Uploaded'),
         ('processing', 'Processing'),
+        ('partial_ready', 'Partially Ready'),
         ('ready', 'Ready'),
         ('failed', 'Failed'),
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='uploaded')
 
     views = models.PositiveIntegerField(default=0)
+    
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -56,3 +60,7 @@ class Video(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
+    def get_embed_url(self):
+      return reverse('video-embed', kwargs={'video_id': self.id})
+    
