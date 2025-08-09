@@ -21386,3 +21386,339 @@ INFO 2025-08-08 13:19:03,921 views 27504 22172    4. C:\Users\HP\Desktop\mydrm\d
 INFO 2025-08-08 13:19:04,017 views 27504 23596    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
 INFO 2025-08-08 13:19:04,017 views 27504 22172       File size: 16 bytes
 INFO 2025-08-08 13:19:04,017 views 27504 23596       File size: 16 bytes
+INFO 2025-08-08 17:04:01,178 views 27504 28592    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-08 17:04:01,291 views 27504 28592       File size: 16 bytes
+INFO 2025-08-08 17:04:01,449 views 27504 28592    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-08 17:04:01,578 views 27504 28592       File size: 16 bytes
+INFO 2025-08-08 17:04:01,706 views 27504 28592    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-08 17:04:01,811 views 27504 28592       File size: 16 bytes
+INFO 2025-08-08 17:04:01,864 views 27504 28592    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-08 17:04:01,922 views 27504 28592       File size: 16 bytes
+INFO 2025-08-08 17:04:02,112 views 27504 33336    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-08 17:04:02,190 views 27504 33336       File size: 16 bytes
+INFO 2025-08-08 17:04:02,231 views 27504 30920    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-08 17:04:02,250 views 27504 33336    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-08 17:04:02,302 views 27504 30920       File size: 16 bytes
+INFO 2025-08-08 17:04:02,320 views 27504 33336       File size: 16 bytes
+INFO 2025-08-08 17:04:02,396 views 27504 33336    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-08 17:04:02,396 views 27504 30920    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-08 17:04:02,481 views 27504 33336       File size: 16 bytes
+INFO 2025-08-08 17:04:02,481 views 27504 30920       File size: 16 bytes
+INFO 2025-08-08 17:04:02,481 views 27504 15188    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-08 17:04:02,540 views 27504 33336    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-08 17:04:02,540 views 27504 15188       File size: 16 bytes
+INFO 2025-08-08 17:04:02,540 views 27504 30920    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-08 17:04:02,588 views 27504 33336       File size: 16 bytes
+INFO 2025-08-08 17:04:02,588 views 27504 28592    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-08 17:04:02,588 views 27504 30920       File size: 16 bytes
+INFO 2025-08-08 17:04:02,588 views 27504 15188    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-08 17:04:02,608 views 27504 28592       File size: 16 bytes
+INFO 2025-08-08 17:04:02,608 views 27504 30920    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-08 17:04:02,620 views 27504 15188       File size: 16 bytes
+INFO 2025-08-08 17:04:02,630 views 27504 9020    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-08 17:04:02,652 views 27504 30920       File size: 16 bytes
+INFO 2025-08-08 17:04:02,652 views 27504 9020       File size: 16 bytes
+INFO 2025-08-08 17:04:02,652 views 27504 28592    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-08 17:04:02,652 views 27504 15188    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-08 17:04:02,672 views 27504 28592       File size: 16 bytes
+INFO 2025-08-08 17:04:02,672 views 27504 15188       File size: 16 bytes
+INFO 2025-08-08 17:04:02,672 views 27504 9020    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-08 17:04:02,672 views 27504 32360    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-08 17:04:02,706 views 27504 15188    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-08 17:04:02,706 views 27504 9020       File size: 16 bytes
+INFO 2025-08-08 17:04:02,706 views 27504 28592    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-08 17:04:02,730 views 27504 15188       File size: 16 bytes
+INFO 2025-08-08 17:04:02,706 views 27504 32360       File size: 16 bytes
+INFO 2025-08-08 17:04:02,730 views 27504 28592       File size: 16 bytes
+INFO 2025-08-08 17:04:02,733 views 27504 9020    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-08 17:04:02,754 views 27504 28592    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-08 17:04:02,754 views 27504 32360    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-08 17:04:02,778 views 27504 9020       File size: 16 bytes
+INFO 2025-08-08 17:04:02,804 views 27504 28592       File size: 16 bytes
+INFO 2025-08-08 17:04:02,804 views 27504 32360       File size: 16 bytes
+INFO 2025-08-08 17:04:02,804 views 27504 9020    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-08 17:04:02,835 views 27504 9020       File size: 16 bytes
+INFO 2025-08-08 17:04:02,835 views 27504 32360    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-08 17:04:02,859 views 27504 32360       File size: 16 bytes
+INFO 2025-08-08 17:04:02,891 views 27504 32360    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-08 17:04:02,926 views 27504 32360       File size: 16 bytes
+INFO 2025-08-08 17:05:44,380 views 27504 29320    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-08 17:05:44,580 views 27504 29320       File size: 16 bytes
+INFO 2025-08-08 17:05:44,660 views 27504 29320    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-08 17:05:44,740 views 27504 29320       File size: 16 bytes
+INFO 2025-08-08 17:05:44,859 views 27504 29320    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-08 17:05:44,993 views 27504 29320       File size: 16 bytes
+INFO 2025-08-08 17:05:45,130 views 27504 29320    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-08 17:05:45,282 views 27504 29320       File size: 16 bytes
+INFO 2025-08-08 17:05:45,730 views 27504 21440    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-08 17:05:45,852 views 27504 21440       File size: 16 bytes
+INFO 2025-08-08 17:05:45,954 views 27504 19580    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-08 17:05:46,122 views 27504 21440    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-08 17:05:46,252 views 27504 19580       File size: 16 bytes
+INFO 2025-08-08 17:05:46,252 views 27504 21440       File size: 16 bytes
+INFO 2025-08-08 17:05:46,330 views 27504 19580    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-08 17:05:46,346 views 27504 21440    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-08 17:05:46,425 views 27504 28668    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-08 17:05:46,441 views 27504 12372    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-08 17:05:46,441 views 27504 19580       File size: 16 bytes
+INFO 2025-08-08 17:05:46,441 views 27504 21440       File size: 16 bytes
+INFO 2025-08-08 17:05:46,494 views 27504 28668       File size: 16 bytes
+INFO 2025-08-08 17:05:46,531 views 27504 29320    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-08 17:05:46,494 views 27504 12372       File size: 16 bytes
+INFO 2025-08-08 17:05:46,494 views 27504 21440    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-08 17:05:46,494 views 27504 19580    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-08 17:05:46,538 views 27504 28668    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-08 17:05:46,538 views 27504 29320       File size: 16 bytes
+INFO 2025-08-08 17:05:46,538 views 27504 12372    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-08 17:05:46,538 views 27504 21440       File size: 16 bytes
+INFO 2025-08-08 17:05:46,570 views 27504 19580       File size: 16 bytes
+INFO 2025-08-08 17:05:46,570 views 27504 28668       File size: 16 bytes
+INFO 2025-08-08 17:05:46,570 views 27504 29320    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-08 17:05:46,570 views 27504 12372       File size: 16 bytes
+INFO 2025-08-08 17:05:46,570 views 27504 19580    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-08 17:05:46,570 views 27504 28668    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-08 17:05:46,570 views 27504 29320       File size: 16 bytes
+INFO 2025-08-08 17:05:46,570 views 27504 12372    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-08 17:05:46,570 views 27504 19580       File size: 16 bytes
+INFO 2025-08-08 17:05:46,606 views 27504 28668       File size: 16 bytes
+INFO 2025-08-08 17:05:46,640 views 27504 29320    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-08 17:05:46,640 views 27504 12372       File size: 16 bytes
+INFO 2025-08-08 17:05:46,642 views 27504 28668    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-08 17:05:46,702 views 27504 29320       File size: 16 bytes
+INFO 2025-08-08 17:05:46,702 views 27504 12372    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-08 17:05:46,730 views 27504 28668       File size: 16 bytes
+INFO 2025-08-08 17:05:46,815 views 27504 5652    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-08 17:05:46,815 views 27504 29320    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-08 17:05:46,815 views 27504 12372       File size: 16 bytes
+INFO 2025-08-08 17:05:46,873 views 27504 5652       File size: 16 bytes
+INFO 2025-08-08 17:05:46,880 views 27504 29320       File size: 16 bytes
+INFO 2025-08-08 17:05:46,951 views 27504 5652    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-08 17:05:47,000 views 27504 5652       File size: 16 bytes
+INFO 2025-08-08 17:05:47,089 views 27504 5652    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-08 17:05:47,211 views 27504 5652       File size: 16 bytes
+INFO 2025-08-08 17:05:47,211 views 27504 5652    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-08 17:05:47,211 views 27504 5652       File size: 16 bytes
+INFO 2025-08-09 15:33:10,286 views 27504 18492    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 15:33:10,501 views 27504 26560    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 15:33:10,502 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:10,630 views 27504 26560       File size: 16 bytes
+INFO 2025-08-09 15:33:10,630 views 27504 27776    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 15:33:10,630 views 27504 18492    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 15:33:10,687 views 27504 21848    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 15:33:10,715 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:10,715 views 27504 26560    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 15:33:10,715 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:10,756 views 27504 21848       File size: 16 bytes
+INFO 2025-08-09 15:33:10,756 views 27504 27776    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 15:33:10,756 views 27504 26560       File size: 16 bytes
+INFO 2025-08-09 15:33:10,816 views 27504 21848    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 15:33:10,816 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:10,821 views 27504 18492    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 15:33:10,821 views 27504 26560    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 15:33:10,895 views 27504 21848       File size: 16 bytes
+INFO 2025-08-09 15:33:10,895 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:10,895 views 27504 27776    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 15:33:10,895 views 27504 26560       File size: 16 bytes
+INFO 2025-08-09 15:33:10,986 views 27504 31284    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 15:33:10,986 views 27504 18492    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 15:33:10,986 views 27504 21848    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 15:33:10,986 views 27504 26560    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 15:33:10,986 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:11,036 views 27504 31284       File size: 16 bytes
+INFO 2025-08-09 15:33:11,036 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:11,036 views 27504 21848       File size: 16 bytes
+INFO 2025-08-09 15:33:11,036 views 27504 26560       File size: 16 bytes
+INFO 2025-08-09 15:33:11,036 views 27504 27776    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 15:33:11,040 views 27504 31284    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 15:33:11,040 views 27504 21848    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 15:33:11,040 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:11,040 views 27504 31284       File size: 16 bytes
+INFO 2025-08-09 15:33:11,088 views 27504 21848       File size: 16 bytes
+INFO 2025-08-09 15:33:11,128 views 27504 31284    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 15:33:11,240 views 27504 31284       File size: 16 bytes
+INFO 2025-08-09 15:33:11,400 views 27504 31284    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 15:33:11,536 views 27504 31284       File size: 16 bytes
+INFO 2025-08-09 15:33:12,262 views 27504 23400    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 15:33:12,305 views 27504 23400       File size: 16 bytes
+INFO 2025-08-09 15:33:12,371 views 27504 23400    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 15:33:12,415 views 27504 23400       File size: 16 bytes
+INFO 2025-08-09 15:33:12,415 views 27504 18492    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 15:33:12,415 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:12,415 views 27504 23400    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 15:33:12,415 views 27504 18492    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 15:33:12,415 views 27504 23400       File size: 16 bytes
+INFO 2025-08-09 15:33:12,420 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:12,420 views 27504 23400    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 15:33:12,420 views 27504 23400       File size: 16 bytes
+INFO 2025-08-09 15:33:12,423 views 27504 18492    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 15:33:12,423 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:12,439 views 27504 18492    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 15:33:12,439 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:33,957 views 27504 27776    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 15:33:34,133 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:34,296 views 27504 27776    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 15:33:34,489 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:34,912 views 27504 27776    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 15:33:35,074 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:35,238 views 27504 27776    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 15:33:35,362 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:35,437 views 27504 18492    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 15:33:35,495 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:35,592 views 27504 26560    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 15:33:35,616 views 27504 18492    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 15:33:35,696 views 27504 26560       File size: 16 bytes
+INFO 2025-08-09 15:33:35,720 views 27504 21848    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 15:33:35,720 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:35,762 views 27504 26560    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 15:33:35,786 views 27504 21848       File size: 16 bytes
+INFO 2025-08-09 15:33:35,786 views 27504 18492    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 15:33:35,818 views 27504 26560       File size: 16 bytes
+INFO 2025-08-09 15:33:35,882 views 27504 21848    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 15:33:35,882 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:35,901 views 27504 23400    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 15:33:35,901 views 27504 26560    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 15:33:35,924 views 27504 18492    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 15:33:35,924 views 27504 21848       File size: 16 bytes
+INFO 2025-08-09 15:33:35,936 views 27504 23400       File size: 16 bytes
+INFO 2025-08-09 15:33:35,936 views 27504 26560       File size: 16 bytes
+INFO 2025-08-09 15:33:35,936 views 27504 18492       File size: 16 bytes
+INFO 2025-08-09 15:33:35,936 views 27504 21848    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 15:33:35,980 views 27504 23400    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 15:33:35,983 views 27504 26560    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 15:33:35,983 views 27504 21848       File size: 16 bytes
+INFO 2025-08-09 15:33:36,017 views 27504 23400       File size: 16 bytes
+INFO 2025-08-09 15:33:36,017 views 27504 26560       File size: 16 bytes
+INFO 2025-08-09 15:33:36,041 views 27504 21848    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 15:33:36,057 views 27504 27776    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 15:33:36,075 views 27504 23400    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 15:33:36,075 views 27504 21848       File size: 16 bytes
+INFO 2025-08-09 15:33:36,101 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:36,101 views 27504 23400       File size: 16 bytes
+INFO 2025-08-09 15:33:36,191 views 27504 27776    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 15:33:36,199 views 27504 23400    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 15:33:36,437 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:36,437 views 27504 23400       File size: 16 bytes
+INFO 2025-08-09 15:33:36,570 views 27504 27776    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 15:33:36,618 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:36,682 views 27504 27776    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 15:33:36,769 views 27504 31284    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 15:33:36,769 views 27504 27776       File size: 16 bytes
+INFO 2025-08-09 15:33:36,771 views 27504 31284       File size: 16 bytes
+INFO 2025-08-09 15:33:36,771 views 27504 31284    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 15:33:36,817 views 27504 31284       File size: 16 bytes
+INFO 2025-08-09 15:33:36,817 views 27504 31284    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 15:33:36,872 views 27504 31284       File size: 16 bytes
+INFO 2025-08-09 15:33:36,872 views 27504 31284    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 15:33:36,872 views 27504 31284       File size: 16 bytes
+INFO 2025-08-09 16:03:43,179 views 1364 7508    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 16:03:43,196 views 1364 7508       File size: 16 bytes
+INFO 2025-08-09 16:03:43,197 views 1364 7508    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 16:03:43,198 views 1364 7508       File size: 16 bytes
+INFO 2025-08-09 16:03:43,199 views 1364 7508    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 16:03:43,199 views 1364 7508       File size: 16 bytes
+INFO 2025-08-09 16:03:43,201 views 1364 7508    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 16:03:43,214 views 1364 7508       File size: 16 bytes
+INFO 2025-08-09 16:03:45,072 views 1364 7508    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 16:03:45,305 views 1364 5072    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 16:03:45,383 views 1364 15308    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 16:03:45,384 views 1364 7508       File size: 16 bytes
+INFO 2025-08-09 16:03:45,459 views 1364 13788    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 16:03:45,459 views 1364 5072       File size: 16 bytes
+INFO 2025-08-09 16:03:45,495 views 1364 15308       File size: 16 bytes
+INFO 2025-08-09 16:03:45,495 views 1364 7508    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 16:03:45,529 views 1364 3804    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 16:03:45,530 views 1364 13788       File size: 16 bytes
+INFO 2025-08-09 16:03:45,530 views 1364 5072    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 16:03:45,560 views 1364 7508       File size: 16 bytes
+INFO 2025-08-09 16:03:45,560 views 1364 15308    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 16:03:45,560 views 1364 3804       File size: 16 bytes
+INFO 2025-08-09 16:03:45,561 views 1364 13788    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 16:03:45,561 views 1364 5072       File size: 16 bytes
+INFO 2025-08-09 16:03:45,585 views 1364 12088    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 16:03:45,585 views 1364 15308       File size: 16 bytes
+INFO 2025-08-09 16:03:45,585 views 1364 3804    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 16:03:45,586 views 1364 13788       File size: 16 bytes
+INFO 2025-08-09 16:03:45,586 views 1364 5072    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 16:03:45,586 views 1364 12088       File size: 16 bytes
+INFO 2025-08-09 16:03:45,587 views 1364 7508    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 16:03:45,587 views 1364 15308    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 16:03:45,587 views 1364 3804       File size: 16 bytes
+INFO 2025-08-09 16:03:45,589 views 1364 13788    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 16:03:45,590 views 1364 5072       File size: 16 bytes
+INFO 2025-08-09 16:03:45,591 views 1364 12088    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 16:03:45,592 views 1364 7508       File size: 16 bytes
+INFO 2025-08-09 16:03:45,593 views 1364 15308       File size: 16 bytes
+INFO 2025-08-09 16:03:45,593 views 1364 3804    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 16:03:45,594 views 1364 13788       File size: 16 bytes
+INFO 2025-08-09 16:03:45,595 views 1364 5072    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 16:03:45,596 views 1364 12088       File size: 16 bytes
+INFO 2025-08-09 16:03:45,597 views 1364 7508    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 16:03:45,597 views 1364 15308    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 16:03:45,598 views 1364 3804       File size: 16 bytes
+INFO 2025-08-09 16:03:45,599 views 1364 13788    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 16:03:45,600 views 1364 5072       File size: 16 bytes
+INFO 2025-08-09 16:03:45,600 views 1364 12088    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 16:03:45,601 views 1364 7508       File size: 16 bytes
+INFO 2025-08-09 16:03:45,602 views 1364 15308       File size: 16 bytes
+INFO 2025-08-09 16:03:45,602 views 1364 3804    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 16:03:45,603 views 1364 13788       File size: 16 bytes
+INFO 2025-08-09 16:03:45,604 views 1364 12088       File size: 16 bytes
+INFO 2025-08-09 16:03:45,606 views 1364 3804       File size: 16 bytes
+INFO 2025-08-09 16:03:45,633 views 1364 12088    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 16:03:45,715 views 1364 12088       File size: 16 bytes
+INFO 2025-08-09 16:05:45,144 views 1364 1316    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 16:05:45,277 views 1364 1316       File size: 16 bytes
+INFO 2025-08-09 16:05:45,401 views 1364 1316    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 16:05:45,476 views 1364 6012    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 16:05:45,544 views 1364 6920    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 16:05:45,544 views 1364 1316       File size: 16 bytes
+INFO 2025-08-09 16:05:45,602 views 1364 12052    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 16:05:45,603 views 1364 6012       File size: 16 bytes
+INFO 2025-08-09 16:05:45,638 views 1364 6920       File size: 16 bytes
+INFO 2025-08-09 16:05:45,638 views 1364 1316    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 16:05:45,675 views 1364 3008    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 16:05:45,676 views 1364 12052       File size: 16 bytes
+INFO 2025-08-09 16:05:45,676 views 1364 6012    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\67b225e5-6af5-4af3-80bf-93b83e046577\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 16:05:45,706 views 1364 1316       File size: 16 bytes
+INFO 2025-08-09 16:05:45,706 views 1364 6920    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\07def0fb-2302-41c0-a793-19a79807ae65\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 16:05:45,706 views 1364 3008       File size: 16 bytes
+INFO 2025-08-09 16:05:45,707 views 1364 12052    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 16:05:45,707 views 1364 6012       File size: 16 bytes
+INFO 2025-08-09 16:05:45,731 views 1364 4432    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 16:05:45,732 views 1364 1316    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\f0df2143-5d8b-4cd4-80c0-dd79a68a5c56.key - EXISTS: True
+INFO 2025-08-09 16:05:45,732 views 1364 6920       File size: 16 bytes
+INFO 2025-08-09 16:05:45,733 views 1364 3008    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\ae797f0f-6766-438a-8724-fc3cab6142de\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 16:05:45,733 views 1364 12052       File size: 16 bytes
+INFO 2025-08-09 16:05:45,734 views 1364 4432       File size: 16 bytes
+INFO 2025-08-09 16:05:45,734 views 1364 1316       File size: 16 bytes
+INFO 2025-08-09 16:05:45,734 views 1364 6012    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 16:05:45,735 views 1364 6920    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 16:05:45,735 views 1364 3008       File size: 16 bytes
+INFO 2025-08-09 16:05:45,735 views 1364 12052    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 16:05:45,736 views 1364 4432    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\1e663857-9c94-4701-850a-1021b7d9cbe4\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 16:05:45,737 views 1364 6012       File size: 16 bytes
+INFO 2025-08-09 16:05:45,738 views 1364 6920       File size: 16 bytes
+INFO 2025-08-09 16:05:45,739 views 1364 3008    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 16:05:45,739 views 1364 12052       File size: 16 bytes
+INFO 2025-08-09 16:05:45,740 views 1364 4432       File size: 16 bytes
+INFO 2025-08-09 16:05:45,769 views 1364 6920    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\07def0fb-2302-41c0-a793-19a79807ae65.key - EXISTS: True
+INFO 2025-08-09 16:05:45,769 views 1364 6012    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\67b225e5-6af5-4af3-80bf-93b83e046577.key - EXISTS: True
+INFO 2025-08-09 16:05:45,769 views 1364 3008       File size: 16 bytes
+INFO 2025-08-09 16:05:45,770 views 1364 12052    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\96ef0f17-3ba8-4a93-a4ab-e8e935a3e209.key - EXISTS: True
+INFO 2025-08-09 16:05:45,771 views 1364 4432    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 16:05:45,771 views 1364 6920       File size: 16 bytes
+INFO 2025-08-09 16:05:45,771 views 1364 6012       File size: 16 bytes
+INFO 2025-08-09 16:05:45,772 views 1364 3008    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\ae797f0f-6766-438a-8724-fc3cab6142de.key - EXISTS: True
+INFO 2025-08-09 16:05:45,803 views 1364 12052       File size: 16 bytes
+INFO 2025-08-09 16:05:45,803 views 1364 4432       File size: 16 bytes
+INFO 2025-08-09 16:05:45,805 views 1364 3008       File size: 16 bytes
+INFO 2025-08-09 16:05:45,807 views 1364 4432    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\1e663857-9c94-4701-850a-1021b7d9cbe4.key - EXISTS: True
+INFO 2025-08-09 16:05:45,958 views 1364 4432       File size: 16 bytes
+INFO 2025-08-09 16:05:46,342 views 1364 1316    1. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 16:05:46,342 views 1364 1316       File size: 16 bytes
+INFO 2025-08-09 16:05:46,343 views 1364 1316    2. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\hls\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 16:05:46,344 views 1364 1316       File size: 16 bytes
+INFO 2025-08-09 16:05:46,344 views 1364 1316    3. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos/keys/39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 16:05:46,344 views 1364 1316       File size: 16 bytes
+INFO 2025-08-09 16:05:46,345 views 1364 1316    4. C:\Users\HP\Desktop\mydrm\drm_project\backend\media\videos\keys\39ecc91f-9bd2-4282-80ec-f3fab5bdcc36.key - EXISTS: True
+INFO 2025-08-09 16:05:46,345 views 1364 1316       File size: 16 bytes
