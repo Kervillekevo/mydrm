@@ -1,0 +1,4 @@
+backend/media/user_*/* filter=lfs diff=lfs merge=lfs -text
+backend/media/videos/original/* filter=lfs diff=lfs merge=lfs -text
+backend/media/videos/hls/* filter=lfs diff=lfs merge=lfs -text
+backend/media/videos/keys/* filter=lfs diff=lfs merge=lfs -text
