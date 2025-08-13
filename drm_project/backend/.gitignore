@@ -1,0 +1,65 @@
+# =====================
+# Python
+# =====================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# =====================
+# Virtual Environment
+# =====================
+env/
+venv/
+ENV/
+.venv/
+env.bak/
+venv.bak/
+
+# =====================
+# Django
+# =====================
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# =====================
+# Environment Variables
+# =====================
+.env
+.env.*  
+!env.example
+
+# =====================
+# Unit test / coverage reports
+# =====================
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# =====================
+# IDE / Editor
+# =====================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# =====================
+# OS Files
+# =====================
+.DS_Store
+Thumbs.db
