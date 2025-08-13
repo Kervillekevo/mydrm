@@ -5,7 +5,6 @@ import './Navbar.css';
 export default function Navbar() {
   const { user, signIn, signUp, signOut, requestPasswordReset, updateProfile, reloadProfile } = useContext(AuthContext);
 
- 
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [isReset, setIsReset] = useState(false);
@@ -67,7 +66,6 @@ export default function Navbar() {
         removePhoto: removePhoto,
       });
 
-      
       await reloadProfile();
 
       alert('Profile updated!');
@@ -81,24 +79,16 @@ export default function Navbar() {
   return (
     <>
       <header className="header">
-        <div className="logo">MYDRM</div>
+        <div className="logo">UHONDO</div>
         <div className="header-actions">
-          {user?.profile_photo ? (
+          {user ? (
             <img
-              src={user.profile_photo}
+              src={user.profile_photo || '/avatar.png'} // ✅ Always show default avatar if no photo
               alt="Profile"
               className="header-avatar"
               onClick={handleOpenProfileModal}
               style={{ cursor: 'pointer' }}
             />
-          ) : user ? (
-            <span
-              className="header-avatar"
-              onClick={handleOpenProfileModal}
-              style={{ cursor: 'pointer' }}
-            >
-              No Photo
-            </span>
           ) : null}
 
           {user ? (
@@ -109,7 +99,6 @@ export default function Navbar() {
         </div>
       </header>
 
-      
       {showAuthModal && (
         <div className="modal">
           <form
@@ -178,23 +167,20 @@ export default function Navbar() {
         </div>
       )}
 
-    
       {showProfileModal && user && (
         <div className="modal">
           <div className="modal-content">
             <h2>Edit Profile</h2>
 
-            {user.profile_photo && !removePhoto ? (
-              <>
-                <img
-                  src={user.profile_photo}
-                  alt="Profile"
-                  style={{ width: '100px', height: '100px', borderRadius: '50%' }}
-                />
-                <button onClick={() => setRemovePhoto(true)}>Remove Current Photo</button>
-              </>
-            ) : (
-              <p>No profile photo</p>
+            {/* ✅ Always show avatar if no profile photo */}
+            <img
+              src={!removePhoto ? (user.profile_photo || '/avatar.png') : '/avatar.png'}
+              alt="Profile"
+              style={{ width: '100px', height: '100px', borderRadius: '50%' }}
+            />
+
+            {user.profile_photo && !removePhoto && (
+              <button onClick={() => setRemovePhoto(true)}>Remove Current Photo</button>
             )}
 
             <label>Upload New Photo:</label>

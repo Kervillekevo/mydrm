@@ -11,6 +11,7 @@ body {
   font-family: Arial, sans-serif;
 }
 
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -22,6 +23,7 @@ body {
   width: 100%;
   padding: 1rem 2rem;
   z-index: 1000;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -33,6 +35,7 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .header-btn {
@@ -117,4 +120,48 @@ body {
   border: none;
   color: #b3b3b3;
   cursor: pointer;
+}
+ /* --- Responsive Navbar --- */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.8rem 1rem;
+  }
+
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  .header-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .header {
+   flex-wrap: nowrap;
+    align-items: center;
+    padding: 0.8rem;
+  }
+
+  .header-actions {
+    width: auto;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    margin-top: auto;
+  }
+
+  .header-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+  }
 }

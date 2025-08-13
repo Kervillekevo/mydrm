@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
@@ -20,7 +20,8 @@ export default function VideoPlayer({ videoId, title }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchVideo = async () => {
+  // ✅ Wrap fetchVideo in useCallback
+  const fetchVideo = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(`${BASE_URL}/videos/${videoId}/`, {
@@ -40,7 +41,7 @@ export default function VideoPlayer({ videoId, title }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [videoId]);
 
   const initPlayer = (url) => {
     if (!videoRef.current) return;
@@ -78,7 +79,7 @@ export default function VideoPlayer({ videoId, title }) {
   // Initial fetch
   useEffect(() => {
     fetchVideo();
-  }, [videoId]);
+  }, [fetchVideo]); // ✅ useCallback ensures stability
 
   // Initialize player
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function VideoPlayer({ videoId, title }) {
     }
   }, [hlsUrl]);
 
-  // Polling for status change (e.g. partial_ready → ready)
+  // Polling for status change
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -110,7 +111,6 @@ export default function VideoPlayer({ videoId, title }) {
             const currentTime = player.currentTime();
             const wasPaused = player.paused();
 
-            // Force reload with cache-busting timestamp
             const updatedUrl = `${BASE_URL}${data.hls_url}?t=${Date.now()}`;
             player.src({ src: updatedUrl, type: 'application/x-mpegURL' });
 
@@ -123,42 +123,32 @@ export default function VideoPlayer({ videoId, title }) {
       } catch (err) {
         console.warn('Polling error:', err.message);
       }
-    }, 8000); // Poll every 8 seconds
+    }, 8000);
 
     return () => clearInterval(interval);
   }, [videoId, status]);
 
   // Cleanup
   useEffect(() => {
+    const videoEl = videoRef.current;
+    const disableContextMenu = (e) => e.preventDefault();
 
-   const videoEl = videoRef.current;
-
-   const disableContextMenu = (e) => e.preventDefault();
-
-   if (videoEl) {
-     videoEl.addEventListener('contextmenu', disableContextMenu);
-  }
+    if (videoEl) videoEl.addEventListener('contextmenu', disableContextMenu);
 
     return () => {
       if (playerRef.current) {
         playerRef.current.dispose();
         playerRef.current = null;
       }
-      if (videoEl) {
-        videoEl.removeEventListener('contextmenu', disableContextMenu);
-    }
+      if (videoEl) videoEl.removeEventListener('contextmenu', disableContextMenu);
     };
   }, []);
- 
+
   return (
     <div className="video-wrapper">
       <div className="video-container">
         <div data-vjs-player>
-          <video
-            ref={videoRef}
-            className="video-js vjs-default-skin"
-            playsInline
-          />
+          <video ref={videoRef} className="video-js vjs-default-skin" playsInline />
         </div>
       </div>
 
@@ -167,10 +157,7 @@ export default function VideoPlayer({ videoId, title }) {
       {error && (
         <div className="video-error">
           ⚠ {error}
-          <button
-            onClick={() => window.location.reload()}
-            className="retry-button"
-          >
+          <button onClick={() => window.location.reload()} className="retry-button">
             Retry
           </button>
         </div>

@@ -2,9 +2,10 @@
 
 /* Page background and layout */
 .page-container {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 24px 32px;
+  max-width: 1500px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background-color: #0f0f0f;
   min-height: 100vh;
   font-family: Arial, sans-serif;
@@ -22,12 +23,12 @@
 /* Grid layout for videos */
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* Desktop default */
   padding: 16px;
   gap: 20px;
 }
 
-/* Individual video card (like YouTube video box) */
+/* Individual video card */
 .video-card {
   background-color: #1e1e1e;
   border-radius: 8px;
@@ -52,8 +53,32 @@
   border-top: 1px solid #2c2c2c;
 }
 
-/* Responsive tweaks */
+/* Maintain 16:9 ratio for videos */
+.video-card video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+
+/* Tablets (2 per row) */
+@media (max-width: 1024px) {
+  .video-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Phones (1 per row) */
 @media (max-width: 600px) {
+  .video-grid {
+    grid-template-columns: 1fr;
+    padding: 8px;
+
+  }
+  .video-card{
+    border-radius: 6px;
+  }
+
   .page-title {
     font-size: 20px;
     text-align: center;
