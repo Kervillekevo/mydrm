@@ -257,6 +257,7 @@ def embed_video(request, video_id):
         render_to_string("videos/embed.html", {
             'video': video,
             'master_playlist_url': f"/secure/hls/{video.id}/master.m3u8",
+            'poster_url': video.poster_url(),
             'token': request.GET.get("token", ""),
         }),
         content_type="text/html"

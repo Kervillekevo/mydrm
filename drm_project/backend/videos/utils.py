@@ -12,8 +12,10 @@ from videos.models import Video
 
 logger = logging.getLogger(__name__)
 
+
 def _encode_secure_path(raw_path: str) -> str:
     return base64.urlsafe_b64encode(raw_path.encode()).decode()
+
 
 def rebuild_master_playlist(video: Video):
     output_dir = os.path.join(settings.MEDIA_ROOT, video.hls_output_dir)
@@ -37,13 +39,13 @@ def rebuild_master_playlist(video: Video):
     with open(master_path, 'w') as f:
         f.write('\n'.join(lines))
 
+
 def encode_rendition(r, input_file, hls_output_dir, key_info_path, video_id):
     try:
         rendition_dir = os.path.join(hls_output_dir, r['name'])
         os.makedirs(rendition_dir, exist_ok=True)
         playlist_path = os.path.join(rendition_dir, 'playlist.m3u8')
-        bitrate = r['bitrate']
-        bufsize = str(int(int(bitrate.replace('k', '')) * 2)) + 'k'
+        bufsize = str(int(int(r['bitrate'].replace('k', '')) * 2)) + 'k'
 
         cmd = [
             'ffmpeg', '-y',
@@ -81,12 +83,18 @@ def encode_rendition(r, input_file, hls_output_dir, key_info_path, video_id):
         logger.error(f"❌ {r['name']} error: {e}")
     return False, r['name']
 
+
 def process_video(video_id):
     logger.info(f"🚀 Starting process_video for {video_id}")
     video = None
 
     try:
-        video = Video.objects.get(id=video_id)
+        try:
+            video = Video.objects.get(id=video_id)
+        except Video.DoesNotExist:
+            logger.warning(f"⚠ Skipping processing — video {video_id} no longer exists in DB.")
+            return
+
         logger.info(f"📽 Found video: {video.title}")
 
         video.status = 'processing'
@@ -206,8 +214,7 @@ def process_video(video_id):
             for future in as_completed(futures):
                 success, name = future.result()
                 if success:
-                   logger.info(f"✅ {name} rendition finished")
-
+                    logger.info(f"✅ {name} rendition finished")
 
         rebuild_master_playlist(video)
         video.status = 'ready'

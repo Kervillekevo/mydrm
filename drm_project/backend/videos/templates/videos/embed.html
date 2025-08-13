@@ -2,80 +2,167 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>{{ video.title }}</title>
   <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
   <style>
-    body {
-      margin: 0;
-      padding: 2rem;
-      background-color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
+    /* Reset */
+    *, *::before, *::after {
       box-sizing: border-box;
     }
-    #video-player {
+    body {
+      margin: 0;
+      padding: 1rem;
+      background-color: #121212;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* centers container horizontally */
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* New container to hold video and title aligned left */
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* aligns children left */
       width: 100%;
-      max-width: 800px;
-      aspect-ratio: 16/9;
-     position: relative;
+      max-width: 900px;
+    }
+
+    #video-wrapper {
+      width: 100%;
+      background: #000;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Video.js player will take full width and keep 16:9 */
+    #video-player {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Title below the player */
+    #video-title {
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 1.5rem;
+      max-width: 90vw;
+      text-align: left;
+      word-break: break-word;
+      padding-left: 4px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      #video-title {
+        font-size: 1.25rem;
+      }
+      #video-wrapper {
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.7);
+      }
+    }
+
+    @media (max-width: 400px) {
+      #video-title {
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Hide the big red play button (the center big play) */
+    .vjs-big-play-button {
+      display: none !important;
+    }
+
+    /* Control bar tweaks for horizontal volume icon */
+    .vjs-volume-panel {
+      flex-direction: row !important; /* force horizontal layout */
+    }
+
+    /* Optional: smaller volume slider for compactness */
+    .vjs-volume-control.vjs-control {
+      max-width: 90px !important;
     }
   </style>
 </head>
 <body>
 
-<video
-  id="video-player"
-  class="video-js vjs-default-skin"
-  controls
-  preload="auto"
-></video>
+  <div id="container">
+    <div id="video-wrapper">
+      <video
+        id="video-player"
+        class="video-js vjs-default-skin"
+        controls
+        preload="auto"
+        playsinline
+        webkit-playsinline
+       
+      ></video>
+    </div>
 
-<script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.1.0/dist/videojs-contrib-quality-levels.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@1.1.3/dist/videojs-hls-quality-selector.min.js"></script>
+    <div id="video-title">{{ video.title }}</div>
+  </div>
 
-<script>
-  const player = videojs('video-player', {
-    autoplay: false,
-    controls: true,
-    responsive: true,
-    fluid: true,
-    sources: [{
-      src: "{{ master_playlist_url }}",
-      type: "application/x-mpegURL"
-    }]
-  });
+  <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.1.0/dist/videojs-contrib-quality-levels.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@1.1.3/dist/videojs-hls-quality-selector.min.js"></script>
 
-  player.hlsQualitySelector && player.hlsQualitySelector({ displayCurrentQuality: true });
+  <script>
+    const player = videojs('video-player', {
+      autoplay: false,
+      controls: true,
+      responsive: true,
+      fluid: true,
+      controlBar: {
+        volumePanel: { inline: true } // horizontal volume controls
+      },
+      sources: [{
+        src: "{{ master_playlist_url }}",
+        type: "application/x-mpegURL"
+      }]
+    });
 
-  // Inject token into all segment/key requests
-  const token = "{{ token|escapejs }}";
+    player.hlsQualitySelector && player.hlsQualitySelector({ displayCurrentQuality: true });
 
-  player.ready(() => {
-    if (player.tech().hls) {
-      const hls = player.tech().hls;
-      if (hls.xhr) {
-        const orig = hls.xhr.beforeRequest;
-        hls.xhr.beforeRequest = function (options) {
-          if (token) {
+    // Append token param to all XHR requests (segments, keys)
+    const token = "{{ token|escapejs }}";
+
+    player.ready(() => {
+      const tech = player.tech && player.tech();
+
+      if (tech && tech.hls && tech.hls.xhr) {
+        const originalBeforeRequest = tech.hls.xhr.beforeRequest;
+
+        tech.hls.xhr.beforeRequest = function(options) {
+          if (token && options.uri) {
             const url = new URL(options.uri, window.location.origin);
             url.searchParams.set('token', token);
             options.uri = url.toString();
           }
-          return orig ? orig(options) : options;
+          return originalBeforeRequest ? originalBeforeRequest(options) : options;
         };
       }
-    }
-      // 🔒 Disable right-click on the video element only
-    const videoEl = document.getElementById('video-player');
-    if (videoEl) {
-      videoEl.addEventListener('contextmenu', (e) => e.preventDefault());
-    }
-  });
-</script>
+
+      // Disable right-click on video element only
+      const videoEl = document.getElementById('video-player');
+      if (videoEl) {
+        videoEl.addEventListener('contextmenu', e => e.preventDefault());
+      }
+    });
+  </script>
 
 </body>
 </html>
