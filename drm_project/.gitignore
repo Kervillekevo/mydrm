@@ -24,7 +24,15 @@ venv.bak/
 *.log
 db.sqlite3
 db.sqlite3-journal
-media/
+
+# Ignore heavy media & uploads
+backend/media/videos/hls/
+backend/media/videos/keys/
+backend/media/videos/original/
+backend/media/user_*/
+videos/
+
+# Keep if you have lightweight static/images
 staticfiles/
 
 # =====================
