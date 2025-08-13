@@ -1,0 +1,167 @@
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000; 
+  color: #fff;     
+  font-family: Arial, sans-serif;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #000; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem 2rem;
+  z-index: 1000;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-btn {
+  background: red;
+  border: none;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.header-btn:hover {
+  background: #e50914;
+}
+
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+.main-content {
+  padding-top: 80px;
+  color: #fff;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+
+.modal {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  width: 100%;
+  max-width: 400px;
+  padding: 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 8px;
+}
+
+.modal-content input {
+  background: #333;
+  border: 1px solid #555;
+  padding: 1rem;
+  color: #fff;
+}
+
+.modal-content button[type="submit"] {
+  background: #e50914;
+  border: none;
+  padding: 1rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+.modal-content .link {
+  cursor: pointer;
+  color: #b3b3b3;
+}
+
+.modal-content .link:hover {
+  text-decoration: underline;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+}
+ /* --- Responsive Navbar --- */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.8rem 1rem;
+  }
+
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  .header-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .header {
+   flex-wrap: nowrap;
+    align-items: center;
+    padding: 0.8rem;
+  }
+
+  .header-actions {
+    width: auto;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    margin-top: auto;
+  }
+
+  .header-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+  }
+}
