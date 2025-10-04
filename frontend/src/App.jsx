@@ -11,10 +11,10 @@ function App() {
       <BrowserRouter basename="/app">
         <Navbar />
         <Routes>
-          {/* Default route now shows videos */}
-          <Route path="/" element={<Videos />} />
-          <Route path="reset-password/:uidb64/:token" element={<ResetPassword />} />
+          {/* Default route matches /app/ */}
+          <Route path="" element={<Videos />} />
           <Route path="videos" element={<Videos />} />
+          <Route path="reset-password/:uidb64/:token" element={<ResetPassword />} />
           <Route path="*" element={<Videos />} />  {/* fallback */}
         </Routes>
       </BrowserRouter>
