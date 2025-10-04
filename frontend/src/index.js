@@ -1,15 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom'; // ✅ add this import
-import './index.css';
-import App from './App';
+import './index.css'; // ✅ keep if you have it
+import App from './App'; // ✅ this should point to YOUR App.jsx
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
 root.render(
   <React.StrictMode>
-    <BrowserRouter basename="/app">   {/* ✅ key change here */}
-      <App />
-    </BrowserRouter>
+    <App />
   </React.StrictMode>
 );
