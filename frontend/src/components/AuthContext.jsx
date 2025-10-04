@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
     const fetchProfile = async () => {
       if (!token) {
         setUser(null);

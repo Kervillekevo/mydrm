@@ -5,7 +5,7 @@ import 'videojs-contrib-quality-levels';
 import HlsQualitySelector from 'videojs-hls-quality-selector';
 import './VideoPlayer.css';
 
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = '';
 
 videojs.registerPlugin('hlsQualitySelector', function (options) {
   return new HlsQualitySelector(this, options);
