@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
 import './Videos.css';
 
-const BASE_URL = '';
+const BASE_URL = 'http://104.152.49.62';
 
 export default function Videos() {
   const [videos, setVideos] = useState([]);
