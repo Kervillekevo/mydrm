@@ -9,7 +9,7 @@ import Videos from "./pages/Videos.jsx";
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/app">
         <Navbar />
         <Routes>
           {/* Default route now shows videos */}
