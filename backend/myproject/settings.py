@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'corsheaders',  # ✅ CORS must be above DRF
+    'corsheaders',  
     'rest_framework',
     'rest_framework.authtoken',
 
@@ -29,16 +29,17 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',  
 
-    'corsheaders.middleware.CorsMiddleware',  # ✅ ALWAYS near the top!
+    'corsheaders.middleware.CorsMiddleware',                
+     'django.middleware.csrf.CsrfViewMiddleware',            
 
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -67,7 +68,7 @@ DATABASES = {
     }
 }
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'http://104.152.49.62/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -87,7 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '104.152.49.62']
 
 TIME_ZONE = 'UTC'
 
@@ -99,18 +100,24 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ Updated CORS
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://104.152.49.62",
 ]
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://104.152.49.62",
+    "http://localhost:3000",
+]
+SITE_BASE_URL = "http://104.152.49.62"
 
-# ✅ Session & CSRF settings for cross-origin cookies
-CSRF_COOKIE_HTTPONLY = False  # JS can read if needed
+
+CSRF_COOKIE_HTTPONLY = False 
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SECURE = False  # Only True with HTTPS
-SESSION_COOKIE_SECURE = False  # Same
+CSRF_COOKIE_SECURE = False  
+SESSION_COOKIE_SECURE = False  
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -121,8 +128,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
-
-# Add this to your settings.py
 
 LOGGING = {
     'version': 1,
@@ -160,10 +165,10 @@ LOGGING = {
     },
 }
 
-# Also update your Q_CLUSTER for better debugging
+
 Q_CLUSTER = {
     'name': 'mydrm',
-    'workers': 1,  # Use only 1 worker for debugging
+    'workers': 1, 
     'recycle': 500,
     'timeout': 3600,
     'retry': 3600,
@@ -171,11 +176,11 @@ Q_CLUSTER = {
     'bulk': 10,
     'orm': 'default',
       'worker_class': 'q.cluster.ThreadWorker',
-    'save_limit': 250,  # Keep more task results for debugging
-    'catch_up': False,  # Don't process old tasks
+    'save_limit': 250, 
+    'catch_up': False,  
 }
 
-# Allow large file uploads
+
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB
 
@@ -187,8 +192,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'kelvinngui00@gmail.com'  # <-- Replace this with your Gmail
-EMAIL_HOST_PASSWORD = 'tssf uoui fmat muwc'  # <-- We'll create this below
+EMAIL_HOST_USER = 'kelvinngui00@gmail.com' 
+EMAIL_HOST_PASSWORD = 'tssf uoui fmat muwc'  
 
 DEFAULT_FROM_EMAIL = 'kelvinngui00@gmail.com'
 # ✅ Ensure .ts files are served with the correct MIME type

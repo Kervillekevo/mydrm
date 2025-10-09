@@ -7,41 +7,17 @@ import './VideoPlayer.css';
 
 const BASE_URL = 'http://104.152.49.62';
 
-videojs.registerPlugin('hlsQualitySelector', function (options) {
+videojs.registerPlugin('hlsQualitySelector', function(options) {
   return new HlsQualitySelector(this, options);
 });
 
-export default function VideoPlayer({ videoId, title }) {
+export default function VideoPlayer({ video }) {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
 
-  const [hlsUrl, setHlsUrl] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(video.status);
   const [error, setError] = useState(null);
-
-  // ✅ Wrap fetchVideo in useCallback
-  const fetchVideo = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${BASE_URL}/videos/${videoId}/`, {
-        headers: token ? { Authorization: `Token ${token}` } : {},
-      });
-
-      if (!res.ok) throw new Error('Video not available');
-
-      const data = await res.json();
-      if (!data.hls_url) throw new Error('HLS not ready yet');
-
-      const fullUrl = `${BASE_URL}${data.hls_url}`;
-      setHlsUrl(fullUrl);
-      setStatus(data.status);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [videoId]);
+  const [loading, setLoading] = useState(true);
 
   const initPlayer = (url) => {
     if (!videoRef.current) return;
@@ -52,11 +28,7 @@ export default function VideoPlayer({ videoId, title }) {
       preload: 'auto',
       responsive: true,
       fluid: true,
-      html5: {
-        vhs: {
-          overrideNative: true,
-        },
-      },
+      html5: { vhs: { overrideNative: true } },
     });
 
     playerRef.current = player;
@@ -76,42 +48,43 @@ export default function VideoPlayer({ videoId, title }) {
     return player;
   };
 
-  // Initial fetch
+  // Initialize player with tokenized URL
   useEffect(() => {
-    fetchVideo();
-  }, [fetchVideo]); // ✅ useCallback ensures stability
+    const token = localStorage.getItem('token');
+    if (!video.hls_url) return;
 
-  // Initialize player
-  useEffect(() => {
-    if (hlsUrl && !playerRef.current) {
-      initPlayer(hlsUrl);
-    }
-  }, [hlsUrl]);
+    const hlsUrlWithToken = `${BASE_URL}${video.hls_url}?token=${token || ''}`;
+    initPlayer(hlsUrlWithToken);
 
-  // Polling for status change
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+    };
+  }, [video]);
+
+  // ✅ Poll backend for status / HLS updates
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${BASE_URL}/videos/${videoId}/`, {
+        const res = await fetch(`${BASE_URL}/videos/${video.id}/`, {
           headers: token ? { Authorization: `Token ${token}` } : {},
         });
 
         if (!res.ok) return;
 
         const data = await res.json();
-        const newStatus = data.status;
+        if (data.status !== status) {
+          setStatus(data.status);
 
-        if (newStatus !== status && data.hls_url) {
-          console.log(`🔄 Status changed: ${status} → ${newStatus}`);
-          setStatus(newStatus);
-
-          const player = playerRef.current;
-          if (player) {
+          if (data.hls_url && playerRef.current) {
+            const player = playerRef.current;
             const currentTime = player.currentTime();
             const wasPaused = player.paused();
 
-            const updatedUrl = `${BASE_URL}${data.hls_url}?t=${Date.now()}`;
+            const updatedUrl = `${BASE_URL}${data.hls_url}?token=${token || ''}&t=${Date.now()}`;
             player.src({ src: updatedUrl, type: 'application/x-mpegURL' });
 
             player.one('loadedmetadata', () => {
@@ -126,9 +99,9 @@ export default function VideoPlayer({ videoId, title }) {
     }, 8000);
 
     return () => clearInterval(interval);
-  }, [videoId, status]);
+  }, [video.id, status]);
 
-  // Cleanup
+  // Disable right-click context menu
   useEffect(() => {
     const videoEl = videoRef.current;
     const disableContextMenu = (e) => e.preventDefault();
@@ -136,10 +109,6 @@ export default function VideoPlayer({ videoId, title }) {
     if (videoEl) videoEl.addEventListener('contextmenu', disableContextMenu);
 
     return () => {
-      if (playerRef.current) {
-        playerRef.current.dispose();
-        playerRef.current = null;
-      }
       if (videoEl) videoEl.removeEventListener('contextmenu', disableContextMenu);
     };
   }, []);
@@ -163,9 +132,9 @@ export default function VideoPlayer({ videoId, title }) {
         </div>
       )}
 
-      {!loading && !error && title && (
+      {!loading && !error && video.title && (
         <div className="video-meta">
-          <h2 className="video-title">{title}</h2>
+          <h2 className="video-title">{video.title}</h2>
         </div>
       )}
     </div>

@@ -2,7 +2,7 @@ import { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "http://104.152.49.62";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);

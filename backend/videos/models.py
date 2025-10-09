@@ -118,5 +118,6 @@ class Video(models.Model):
 
         super().delete(*args, **kwargs)
 
-    def get_embed_url(self):
-        return reverse('video-embed', kwargs={'video_id': self.id})
+def embed_code(self):
+    base_url = getattr(settings, "SITE_BASE_URL", "http://104.152.49.62")
+    return f"<iframe src='{base_url}{self.get_embed_url()}' width='640' height='360' frameborder='0' allowfullscreen></iframe>"

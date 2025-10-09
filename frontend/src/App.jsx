@@ -8,14 +8,14 @@ import Videos from "./pages/Videos.jsx";
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter basename="/app">
+      <BrowserRouter >
         <Navbar />
         <Routes>
-          {/* Default route matches /app/ */}
+          
           <Route path="" element={<Videos />} />
           <Route path="videos" element={<Videos />} />
           <Route path="reset-password/:uidb64/:token" element={<ResetPassword />} />
-          <Route path="*" element={<Videos />} />  {/* fallback */}
+          <Route path="*" element={<Videos />} />  
         </Routes>
       </BrowserRouter>
     </AuthProvider>

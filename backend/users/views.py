@@ -18,10 +18,12 @@ from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework import generics, status
 from .serializers import PasswordResetRequestSerializer, SetNewPasswordSerializer
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -41,7 +43,7 @@ class RegisterView(generics.GenericAPIView):
             'token':token.key
         }, status=status.HTTP_201_CREATED)
     
-
+@method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
     def post(self, request):
         username = request.data.get('username')
@@ -78,7 +80,7 @@ class ProfileDetailView(generics.RetrieveUpdateAPIView):
         profile, created = Profile.objects.get_or_create(user=self.request.user)
         return profile    
     
-
+@method_decorator(csrf_exempt, name='dispatch')
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = PasswordResetRequestSerializer
 
@@ -124,7 +126,7 @@ class PasswordTokenCheckAPI(APIView):
 
         return Response({'success': 'Token is valid', 'uidb64': uidb64, 'token': token}, status=status.HTTP_200_OK)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class PasswordResetConfirm(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
