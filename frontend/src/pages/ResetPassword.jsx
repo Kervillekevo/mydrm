@@ -42,7 +42,8 @@ export default function ResetPassword() {
 
       if (response.ok) {
         alert('✅ Password reset successful! Please log in.');
-        navigate('/login');
+        navigate('/', { replace:true});
+
       } else {
         alert('❌ Error: ' + (data.error || JSON.stringify(data)));
       }

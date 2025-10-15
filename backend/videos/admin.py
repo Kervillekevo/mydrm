@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django_q.tasks import async_task  # ✅ Required for background processing
 from django.utils.timezone import localtime
+from django.conf import settings
 from .models import Video
 
 from django.contrib.admin import SimpleListFilter
@@ -95,8 +96,9 @@ class VideoAdmin(admin.ModelAdmin):
     def embed_code(self, obj):
       if obj.status != 'ready':
         return "Embed available when video is ready."
-    
-      embed_url = f"http://localhost:8000{obj.get_embed_url()}"
+      
+      base_url = getattr(settings, "SITE_BASE_URL", "http://104.152.49.62")
+      embed_url = f"{base_url}{obj.get_embed_url()}"
       return mark_safe(
         f"<textarea rows='3' cols='60' readonly>"
         f"<iframe src='{embed_url}' width='640' height='360' "

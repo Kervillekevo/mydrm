@@ -146,15 +146,16 @@ def secure_file_response(request: HttpRequest, encoded_path: str):
 
 
 # --- Embed Video ---
-@xframe_options_exempt
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([AllowAny])
 def embed_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
 
+    # Always use SITE_BASE_URL from settings (falls back to your IP)
+    base_url = getattr(settings, "SITE_BASE_URL", "http://104.152.49.62")
+
     # Build absolute master playlist URL
-    base_url = "http://104.152.49.62"  # your live server
     master_playlist_url = f"{base_url}/secure/hls/{video.id}/master.m3u8"
 
     html = render_to_string("videos/embed.html", {
@@ -165,7 +166,6 @@ def embed_video(request, video_id):
     })
 
     return HttpResponse(html, content_type="text/html")
-
 
 # --- ViewSet ---
 class VideoViewSet(viewsets.ReadOnlyModelViewSet):
