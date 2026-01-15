@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './ResetPassword.css';
 
-const BASE_URL = 'http://104.152.49.62';
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+
 
 export default function ResetPassword() {
   const { uidb64, token } = useParams();

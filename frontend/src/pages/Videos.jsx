@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
 import './Videos.css';
 
-const BASE_URL = 'http://104.152.49.62';
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+
 
 export default function Videos() {
   const [videos, setVideos] = useState([]);
@@ -14,6 +16,12 @@ export default function Videos() {
         const token = localStorage.getItem('token');
         const headers = token ? { Authorization: `Token ${token}` } : {};
         const res = await fetch(`${BASE_URL}/videos/`, { headers });
+
+        if (res.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '/login';
+          return;
+        }
 
         if (!res.ok) {
           console.error('Failed to fetch videos, status:', res.status);

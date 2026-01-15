@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
 import HlsQualitySelector from 'videojs-hls-quality-selector';
 import './VideoPlayer.css';
 
-const BASE_URL = 'http://104.152.49.62';
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-videojs.registerPlugin('hlsQualitySelector', function(options) {
+videojs.registerPlugin('hlsQualitySelector', function (options) {
   return new HlsQualitySelector(this, options);
 });
 
@@ -15,11 +15,25 @@ export default function VideoPlayer({ video }) {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
 
-  const [status, setStatus] = useState(video.status);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const initPlayer = (url) => {
+  // 🔑 Fetch ONLY the stream token
+  const fetchStreamToken = async () => {
+
+    const res = await fetch(
+      `${BASE_URL}/videos/${video.id}/stream-token/`,
+    );
+
+    if (!res.ok) {
+      throw new Error('Failed to obtain stream token');
+    }
+
+    return (await res.text()).trim();
+  };
+
+  // 🎬 Initialize Video.js
+  const initPlayer = (hlsUrl) => {
     if (!videoRef.current) return;
 
     const player = videojs(videoRef.current, {
@@ -28,88 +42,75 @@ export default function VideoPlayer({ video }) {
       preload: 'auto',
       responsive: true,
       fluid: true,
-      html5: { vhs: { overrideNative: true } },
+      html5: {
+        vhs: {
+          overrideNative: true,
+        },
+      },
     });
 
     playerRef.current = player;
 
-    player.src({ src: url, type: 'application/x-mpegURL' });
+    player.src({
+      src: hlsUrl,
+      type: 'application/x-mpegURL',
+    });
 
     player.ready(() => {
-      if (!player.controlBar.getChild('QualitySelector')) {
-        player.hlsQualitySelector({ displayCurrentQuality: true });
-      }
+      player.hlsQualitySelector({ displayCurrentQuality: true });
+      setLoading(false);
     });
 
     player.on('error', () => {
       setError(player.error()?.message || 'Playback error');
     });
-
-    return player;
   };
 
-  // Initialize player with tokenized URL
+  // ▶️ Start secure playback
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!video.hls_url) return;
+    if (!video?.id) return;
 
-    const hlsUrlWithToken = `${BASE_URL}${video.hls_url}?token=${token || ''}`;
-    initPlayer(hlsUrlWithToken);
+    let mounted = true;
+
+    const startPlayback = async () => {
+      try {
+        const streamToken = await fetchStreamToken();
+        if (!mounted) return;
+
+        const hlsUrl =
+          `${BASE_URL}/videos/secure/hls/${video.id}/master.m3u8?token=${streamToken}`;
+
+        initPlayer(hlsUrl);
+      } catch (err) {
+        console.error(err);
+        setError('Unable to start secure playback');
+      }
+    };
+
+    startPlayback();
 
     return () => {
+      mounted = false;
       if (playerRef.current) {
         playerRef.current.dispose();
         playerRef.current = null;
       }
     };
-  }, [video]);
+  }, [video?.id]);
 
-  // ✅ Poll backend for status / HLS updates
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${BASE_URL}/videos/${video.id}/`, {
-          headers: token ? { Authorization: `Token ${token}` } : {},
-        });
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-        if (data.status !== status) {
-          setStatus(data.status);
-
-          if (data.hls_url && playerRef.current) {
-            const player = playerRef.current;
-            const currentTime = player.currentTime();
-            const wasPaused = player.paused();
-
-            const updatedUrl = `${BASE_URL}${data.hls_url}?token=${token || ''}&t=${Date.now()}`;
-            player.src({ src: updatedUrl, type: 'application/x-mpegURL' });
-
-            player.one('loadedmetadata', () => {
-              player.currentTime(currentTime);
-              if (!wasPaused) player.play();
-            });
-          }
-        }
-      } catch (err) {
-        console.warn('Polling error:', err.message);
-      }
-    }, 8000);
-
-    return () => clearInterval(interval);
-  }, [video.id, status]);
-
-  // Disable right-click context menu
+  // ❌ Disable right-click
   useEffect(() => {
     const videoEl = videoRef.current;
     const disableContextMenu = (e) => e.preventDefault();
 
-    if (videoEl) videoEl.addEventListener('contextmenu', disableContextMenu);
+    if (videoEl) {
+      videoEl.addEventListener('contextmenu', disableContextMenu);
+    }
 
     return () => {
-      if (videoEl) videoEl.removeEventListener('contextmenu', disableContextMenu);
+      if (videoEl) {
+        videoEl.removeEventListener('contextmenu', disableContextMenu);
+      }
     };
   }, []);
 
@@ -117,22 +118,33 @@ export default function VideoPlayer({ video }) {
     <div className="video-wrapper">
       <div className="video-container">
         <div data-vjs-player>
-          <video ref={videoRef} className="video-js vjs-default-skin" playsInline />
+          <video
+            ref={videoRef}
+            className="video-js vjs-default-skin"
+            playsInline
+          />
         </div>
       </div>
 
-      {loading && <div className="video-loading">Loading...</div>}
+      {loading && (
+        <div className="video-loading">
+          Loading secure stream…
+        </div>
+      )}
 
       {error && (
         <div className="video-error">
           ⚠ {error}
-          <button onClick={() => window.location.reload()} className="retry-button">
+          <button
+            onClick={() => window.location.reload()}
+            className="retry-button"
+          >
             Retry
           </button>
         </div>
       )}
 
-      {!loading && !error && video.title && (
+      {!loading && !error && video?.title && (
         <div className="video-meta">
           <h2 className="video-title">{video.title}</h2>
         </div>
