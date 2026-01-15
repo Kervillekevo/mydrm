@@ -1,11 +1,10 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from django_q.tasks import async_task  # ✅ Required for background processing
-from django.utils.timezone import localtime
+from django_q.tasks import async_task
 from django.conf import settings
 from .models import Video
-
 from django.contrib.admin import SimpleListFilter
+
 
 class UploadMonthFilter(SimpleListFilter):
     title = 'Upload Month'
@@ -24,20 +23,10 @@ class UploadMonthFilter(SimpleListFilter):
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('title', 'owner', 'status', 'views', 'created_at', 'aes_key_link')
-    search_fields = ('title', 'owner__username',)
+    search_fields = ('title', 'owner__username')
     readonly_fields = ('video_preview', 'stream_link', 'aes_key_link', 'embed_code')
     list_filter = (UploadMonthFilter,)
     actions = ['delete_selected_month_videos']
-
-    @admin.action(description='🗑️ Delete Videos in This Month')
-    def delete_selected_month_videos(self, request, queryset):
-        count = queryset.count()
-        if count == 0:
-            self.message_user(request, "⚠️ No videos selected.", level='warning')
-        else:
-            queryset.delete()
-            self.message_user(request, f"✅ {count} videos deleted from selected month.")
-
 
     fieldsets = (
         ('Video Details', {
@@ -50,15 +39,12 @@ class VideoAdmin(admin.ModelAdmin):
             'fields': ('views',)
         }),
         ('Embed', {
-            'fields':('embed_code',)
-        })
+            'fields': ('embed_code',)
+        }),
     )
 
     def save_model(self, request, obj, form, change):
-        # Save the Video object normally
         super().save_model(request, obj, form, change)
-
-        # Only queue for processing if status is still uploaded (not ready yet)
         if obj.status == 'uploaded' and obj.uploaded_file:
             async_task('videos.tasks.process_video_task', obj.id)
             self.message_user(request, f"✅ Video {obj.id} queued for processing!")
@@ -66,15 +52,13 @@ class VideoAdmin(admin.ModelAdmin):
     def video_preview(self, obj):
         if obj.uploaded_file:
             return mark_safe(
-                f'<video width="640" height="360" controls style="border:1px solid #ccc">'
+                f'<video width="640" height="360" controls>'
                 f'<source src="{obj.uploaded_file.url}" type="video/mp4">'
-                f'Your browser does not support the video tag.'
                 f'</video>'
             )
         return "No video uploaded yet."
 
     video_preview.short_description = "Preview"
-    
 
     def stream_link(self, obj):
         if obj.status == 'ready':
@@ -92,20 +76,18 @@ class VideoAdmin(admin.ModelAdmin):
 
     aes_key_link.short_description = "AES Key Link"
 
-
     def embed_code(self, obj):
-      if obj.status != 'ready':
-        return "Embed available when video is ready."
-      
-      base_url = getattr(settings, "SITE_BASE_URL", "http://104.152.49.62")
-      embed_url = f"{base_url}{obj.get_embed_url()}"
-      return mark_safe(
-        f"<textarea rows='3' cols='60' readonly>"
-        f"<iframe src='{embed_url}' width='640' height='360' "
-        f"frameborder='0' allowfullscreen></iframe></textarea>"
-    )
+        if obj.status != 'ready':
+            return "Embed available when video is ready."
+
+        base_url = getattr(settings, "SITE_BASE_URL", "http://localhost:8000")
+        embed_url = f"{base_url}{obj.get_embed_url()}"
+
+        return mark_safe(
+            f"<textarea rows='3' cols='80' readonly>"
+            f"<iframe src='{embed_url}' width='640' height='360' "
+            f"frameborder='0' allowfullscreen></iframe>"
+            f"</textarea>"
+        )
 
     embed_code.short_description = "Embed Code"
-
-
-

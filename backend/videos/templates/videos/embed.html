@@ -121,48 +121,42 @@
   <script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@1.1.3/dist/videojs-hls-quality-selector.min.js"></script>
 
   <script>
-    const player = videojs('video-player', {
-      autoplay: false,
-      controls: true,
-      responsive: true,
-      fluid: true,
-      controlBar: {
-        volumePanel: { inline: true } // horizontal volume controls
-      },
-      sources: [{
-        src: "{{ master_playlist_url }}",
-        type: "application/x-mpegURL"
-      }]
-    });
+  const token = "{{ token|escapejs }}";
 
-    player.hlsQualitySelector && player.hlsQualitySelector({ displayCurrentQuality: true });
-
-    // Append token param to all XHR requests (segments, keys)
-    const token = "{{ token|escapejs }}";
-
-    player.ready(() => {
-      const tech = player.tech && player.tech();
-
-      if (tech && tech.hls && tech.hls.xhr) {
-        const originalBeforeRequest = tech.hls.xhr.beforeRequest;
-
-        tech.hls.xhr.beforeRequest = function(options) {
-          if (token && options.uri) {
-            const url = new URL(options.uri, window.location.origin);
-            url.searchParams.set('token', token);
-            options.uri = url.toString();
+  const player = videojs('video-player', {
+    autoplay: false,
+    controls: true,
+    preload: 'auto',
+    fluid: true,
+    html5: {
+      vhs: {
+        xhr: {
+          beforeRequest: function (options) {
+            if (token && options.uri) {
+              const url = new URL(options.uri, window.location.origin);
+              url.searchParams.set('token', token);
+              options.uri = url.toString();
+            }
+            return options;
           }
-          return originalBeforeRequest ? originalBeforeRequest(options) : options;
-        };
+        }
       }
+    },
+    sources: [{
+      src: "{{ master_playlist_url }}",
+      type: "application/x-mpegURL"
+    }]
+  });
 
-      // Disable right-click on video element only
-      const videoEl = document.getElementById('video-player');
-      if (videoEl) {
-        videoEl.addEventListener('contextmenu', e => e.preventDefault());
-      }
-    });
-  </script>
+  player.hlsQualitySelector &&
+    player.hlsQualitySelector({ displayCurrentQuality: true });
+
+  // Disable right click
+  player.ready(() => {
+    player.el().addEventListener('contextmenu', e => e.preventDefault());
+  });
+</script>
+
 
 </body>
 </html>

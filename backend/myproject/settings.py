@@ -5,9 +5,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-2qv9zap9zr7#&=v&hs-i@0w*+qj=vr$zb7kddz40#w#b@hw$r%'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "5.189.188.88",
+    "localhost",
+    "127.0.0.1",
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,7 +72,7 @@ DATABASES = {
     }
 }
 
-MEDIA_URL = 'http://104.152.49.62/media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -88,7 +92,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '104.152.49.62']
 
 TIME_ZONE = 'UTC'
 
@@ -103,21 +106,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://104.152.49.62",
+    "http://5.189.188.88",
 ]
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = False
 CSRF_TRUSTED_ORIGINS = [
-    "http://104.152.49.62",
-    "http://localhost:3000",
+    "http://5.189.188.88",
 ]
-SITE_BASE_URL = "http://104.152.49.62"
+SITE_BASE_URL = 'http://5.189.188.88'
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
+X_FRAME_OPTIONS = "ALLOWALL"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+SECURE_CROSS_ORIGIN_EMBEDDER_POLICY = "require-corp"
+
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+CORS_ALLOW_ALL_ORIGINS = False
 
 CSRF_COOKIE_HTTPONLY = False 
-CSRF_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SECURE = False  
-SESSION_COOKIE_SECURE = False  
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -125,7 +137,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 }
 
