@@ -12,15 +12,17 @@ videojs.registerPlugin('hlsQualitySelector', function (options) {
 });
 
 export default function VideoPlayer({ videoId, title }) {
-  const videoRef = useRef(null);
+  const videoRef  = useRef(null);
   const playerRef = useRef(null);
 
-  const [hlsUrl, setHlsUrl] = useState(null);
-  const [status, setStatus] = useState(null);
+  const [hlsUrl,  setHlsUrl]  = useState(null);
+  const [status,  setStatus]  = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error,   setError]   = useState(null);
 
-  // ✅ Wrap fetchVideo in useCallback
+  // ✅ NEW master URL — no .m3u8, VDH won't detect it
+  const masterUrl = (id) => `${BASE_URL}/api/stream/${id}/master`;
+
   const fetchVideo = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
@@ -31,10 +33,12 @@ export default function VideoPlayer({ videoId, title }) {
       if (!res.ok) throw new Error('Video not available');
 
       const data = await res.json();
-      if (!data.hls_url) throw new Error('HLS not ready yet');
+      if (!data.status || data.status === 'uploaded' || data.status === 'processing') {
+        throw new Error('HLS not ready yet');
+      }
 
-      const fullUrl = `${BASE_URL}${data.hls_url}`;
-      setHlsUrl(fullUrl);
+      // ✅ Always use the new clean URL — ignore hls_url from API
+      setHlsUrl(masterUrl(videoId));
       setStatus(data.status);
     } catch (err) {
       setError(err.message);
@@ -47,21 +51,29 @@ export default function VideoPlayer({ videoId, title }) {
     if (!videoRef.current) return;
 
     const player = videojs(videoRef.current, {
-      controls: true,
-      autoplay: false,
-      preload: 'auto',
+      controls:  true,
+      autoplay:  false,
+      preload:   'auto',
       responsive: true,
-      fluid: true,
+      fluid:     true,
       html5: {
         vhs: {
           overrideNative: true,
+          // ✅ Tell Video.js to accept any MIME type for our playlists
+          // because we now serve them as text/plain
+          handleManifestRedirects: true,
         },
       },
     });
 
     playerRef.current = player;
 
-    player.src({ src: url, type: 'application/x-mpegURL' });
+    player.src({
+      src:  url,
+      // ✅ Force the player to treat the response as HLS
+      // regardless of the Content-Type header we send
+      type: 'application/x-mpegURL',
+    });
 
     player.ready(() => {
       if (!player.controlBar.getChild('QualitySelector')) {
@@ -79,16 +91,16 @@ export default function VideoPlayer({ videoId, title }) {
   // Initial fetch
   useEffect(() => {
     fetchVideo();
-  }, [fetchVideo]); // ✅ useCallback ensures stability
+  }, [fetchVideo]);
 
-  // Initialize player
+  // Initialise player once URL is known
   useEffect(() => {
     if (hlsUrl && !playerRef.current) {
       initPlayer(hlsUrl);
     }
   }, [hlsUrl]);
 
-  // Polling for status change
+  // Poll for status changes (e.g. 240p → ready)
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -96,23 +108,19 @@ export default function VideoPlayer({ videoId, title }) {
         const res = await fetch(`${BASE_URL}/videos/${videoId}/`, {
           headers: token ? { Authorization: `Token ${token}` } : {},
         });
-
         if (!res.ok) return;
 
         const data = await res.json();
-        const newStatus = data.status;
-
-        if (newStatus !== status && data.hls_url) {
-          console.log(`🔄 Status changed: ${status} → ${newStatus}`);
-          setStatus(newStatus);
+        if (data.status !== status) {
+          setStatus(data.status);
 
           const player = playerRef.current;
-          if (player) {
+          if (player && (data.status === 'partial_ready' || data.status === 'ready')) {
             const currentTime = player.currentTime();
-            const wasPaused = player.paused();
+            const wasPaused   = player.paused();
 
-            const updatedUrl = `${BASE_URL}${data.hls_url}?t=${Date.now()}`;
-            player.src({ src: updatedUrl, type: 'application/x-mpegURL' });
+            // Add cache-buster so the player re-fetches fresh aliases
+            player.src({ src: `${masterUrl(videoId)}?t=${Date.now()}`, type: 'application/x-mpegURL' });
 
             player.one('loadedmetadata', () => {
               player.currentTime(currentTime);
@@ -131,16 +139,15 @@ export default function VideoPlayer({ videoId, title }) {
   // Cleanup
   useEffect(() => {
     const videoEl = videoRef.current;
-    const disableContextMenu = (e) => e.preventDefault();
-
-    if (videoEl) videoEl.addEventListener('contextmenu', disableContextMenu);
+    const noCtx   = (e) => e.preventDefault();
+    if (videoEl) videoEl.addEventListener('contextmenu', noCtx);
 
     return () => {
       if (playerRef.current) {
         playerRef.current.dispose();
         playerRef.current = null;
       }
-      if (videoEl) videoEl.removeEventListener('contextmenu', disableContextMenu);
+      if (videoEl) videoEl.removeEventListener('contextmenu', noCtx);
     };
   }, []);
 

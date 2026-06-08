@@ -121,7 +121,7 @@ body {
   color: #b3b3b3;
   cursor: pointer;
 }
- /* --- Responsive Navbar --- */
+
 @media (max-width: 768px) {
   .header {
     padding: 0.8rem 1rem;
