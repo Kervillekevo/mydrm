@@ -2,19 +2,18 @@ import os
 import logging
 import mimetypes
 import base64
+import time
+import secrets
 from urllib.parse import unquote
 
 from django.conf import settings
 from django.http import HttpResponse, FileResponse, Http404
 from django.shortcuts import get_object_or_404
-
 from django.http import Http404, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
-
-from django.http import HttpResponseRedirect
-
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
+from django.core.cache import cache
 
 from rest_framework.permissions import AllowAny
 from rest_framework import viewsets
@@ -29,162 +28,67 @@ from .serializers import VideoSerializer
 logger = logging.getLogger(__name__)
 
 
+# ---------------------------------------------------------------------------
+# 🔑  AES Key — unchanged logic, just tightened headers
+# ---------------------------------------------------------------------------
+
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([AllowAny])
 def serve_aes_key(request, video_id):
-    logger.info("🔑 DEBUG: AES key request for video_id: %s", video_id)
-    
+    logger.info("🔑 AES key request for video_id: %s", video_id)
+
     try:
         video = get_object_or_404(Video, id=video_id)
-        logger.info("✅ DEBUG: Video found - status: %s", video.status)
-        logger.info("✅ DEBUG: Video.aes_key_path: %s", video.aes_key_path)
-        
-        # Check multiple possible locations
+
         possible_paths = [
-            # Where your processing puts it (parent HLS dir)
             os.path.join(settings.MEDIA_ROOT, 'videos', 'hls', f'{video_id}.key'),
-            # Where your processing puts it (video-specific HLS dir)  
             os.path.join(settings.MEDIA_ROOT, 'videos', 'hls', str(video_id), f'{video_id}.key'),
-            # Where your model says it should be
             os.path.join(settings.MEDIA_ROOT, video.aes_key_path) if video.aes_key_path else None,
-            # Original keys directory
             os.path.join(settings.MEDIA_ROOT, 'videos', 'keys', f'{video_id}.key'),
         ]
-        
-        # Remove None values
         possible_paths = [p for p in possible_paths if p]
-        
-        logger.info("🔍 DEBUG: Checking these paths:")
-        for i, path in enumerate(possible_paths):
-            exists = os.path.exists(path)
-            logger.info("   %d. %s - EXISTS: %s", i+1, path, exists)
-            if exists:
-                try:
-                    file_size = os.path.getsize(path)
-                    logger.info("      File size: %d bytes", file_size)
-                except Exception as e:
-                    logger.error("      Error getting file size: %s", e)
-        
-        # Try each path
+
         for path in possible_paths:
             if os.path.exists(path):
-                logger.info("✅ DEBUG: Using key from: %s", path)
-                try:
-                    with open(path, 'rb') as f:
-                        key_data = f.read()
-                    
-                    logger.info("✅ DEBUG: Successfully read %d bytes", len(key_data))
-                    
-                    response = HttpResponse(key_data, content_type='application/octet-stream')
-                    response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-                    response['Access-Control-Allow-Credentials'] = 'true'
-                    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-                    return response
-                except Exception as e:
-                    logger.error("❌ DEBUG: Error reading key file %s: %s", path, str(e))
-                    continue
-        
-        # If we get here, no key was found
-        logger.error("❌ DEBUG: No key file found in any location!")
-        
-        # Let's also check what directories exist
-        hls_base = os.path.join(settings.MEDIA_ROOT, 'videos', 'hls')
-        if os.path.exists(hls_base):
-            logger.info("📁 DEBUG: HLS base directory contents:")
-            try:
-                for item in os.listdir(hls_base):
-                    item_path = os.path.join(hls_base, item)
-                    is_dir = os.path.isdir(item_path)
-                    logger.info("   - %s %s", item, "(DIR)" if is_dir else "(FILE)")
-            except Exception as e:
-                logger.error("   Error reading HLS directory: %s", e)
-        else:
-            logger.error("📁 DEBUG: HLS base directory doesn't exist: %s", hls_base)
-        
+                with open(path, 'rb') as f:
+                    key_data = f.read()
+
+                response = HttpResponse(key_data, content_type='application/octet-stream')
+                response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+                response['Access-Control-Allow-Credentials'] = 'true'
+                response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+                return response
+
+        logger.error("❌ No key file found for video %s", video_id)
         raise Http404("Key not found")
-        
-    except Video.DoesNotExist:
-        logger.error("❌ DEBUG: Video with id %s not found", video_id)
-        raise Http404("Video not found")
+
     except Exception as e:
-        logger.error("❌ DEBUG: Unexpected error: %s", str(e))
+        logger.error("❌ AES key error: %s", str(e))
         raise Http404("Internal error")
 
 
-@api_view(['GET'])
-@authentication_classes([])
-@permission_classes([AllowAny])
-def serve_hls_segment(request, video_id, quality, segment_name):
-    logger.debug("📽 HLS segment request | User: %s | Auth: %s", request.user, request.auth)
-
-    video = get_object_or_404(Video, id=video_id)
-
-    full_segment_name = f"{segment_name}.ts"
-    segment_path = os.path.join(settings.MEDIA_ROOT, 'videos', 'hls', str(video_id), quality, full_segment_name)
-
-    if os.path.exists(segment_path):
-        mime_type, _ = mimetypes.guess_type(segment_path)
-        if not mime_type:
-            mime_type = 'video/MP2T'
-
-        response = FileResponse(open(segment_path, 'rb'), content_type=mime_type)
-        response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-        response['Access-Control-Allow-Credentials'] = 'true'
-        return response
-
-    logger.error("❌ Segment file not found: %s", segment_path)
-    raise Http404("Segment not found")
-
-
-
-@api_view(['GET'])
-@authentication_classes([])
-@permission_classes([AllowAny])
-def serve_hls_playlist(request, video_id, quality):
-    logger.debug("📺 HLS playlist request | User: %s | Video: %s | Quality: %s", request.user, video_id, quality)
-
-    video = get_object_or_404(Video, id=video_id)
-
-    playlist_path = os.path.join(settings.MEDIA_ROOT, 'videos', 'hls', str(video_id), quality, 'playlist.m3u8')
-
-    if not os.path.exists(playlist_path):
-        logger.error("❌ Playlist not found at: %s", playlist_path)
-        raise Http404("Playlist not found")
-
-    try:
-        response = FileResponse(open(playlist_path, 'rb'), content_type='application/vnd.apple.mpegurl')
-        response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-        response['Access-Control-Allow-Credentials'] = 'true'
-        return response
-    except Exception as e:
-        logger.exception("🔥 Failed to serve playlist: %s", str(e))
-        return Response({"detail": "Internal server error"}, status=500)
-
-
+# ---------------------------------------------------------------------------
+# 🎬  Master playlist
+#     CHANGE 1: served as text/plain  →  VDH does NOT recognise it as HLS
+# ---------------------------------------------------------------------------
 
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([AllowAny])
 def serve_master_playlist(request, video_id):
-    """
-    Dynamically generates master HLS playlist that references all quality variants
-    using absolute URLs so that relative paths don't cause 404s.
-    """
-    logger.debug("🎬 Master playlist request | User: %s | Video: %s", request.user, video_id)
-    
+    logger.debug("🎬 Master playlist | video: %s", video_id)
+
     try:
         video = get_object_or_404(Video, id=video_id)
 
-        # Define quality variants
         quality_variants = [
-            {'quality': '240p', 'bandwidth': 500000, 'resolution': '426x240'},
-            {'quality': '360p', 'bandwidth': 1000000, 'resolution': '640x360'},
-            {'quality': '480p', 'bandwidth': 1600000, 'resolution': '854x480'},
-            {'quality': '720p', 'bandwidth': 3000000, 'resolution': '1280x720'},
+            {'quality': '240p',  'bandwidth': 500000,  'resolution': '426x240'},
+            {'quality': '360p',  'bandwidth': 1000000, 'resolution': '640x360'},
+            {'quality': '480p',  'bandwidth': 1600000, 'resolution': '854x480'},
+            {'quality': '720p',  'bandwidth': 3000000, 'resolution': '1280x720'},
         ]
 
-        # Build master playlist
         playlist_lines = ['#EXTM3U', '#EXT-X-VERSION:3', '']
         base_path = os.path.join(settings.MEDIA_ROOT, 'videos', 'hls', str(video_id))
 
@@ -193,59 +97,197 @@ def serve_master_playlist(request, video_id):
             if os.path.exists(variant_path):
                 playlist_lines.extend([
                     f"#EXT-X-STREAM-INF:BANDWIDTH={variant['bandwidth']},RESOLUTION={variant['resolution']}",
-                    f"/secure/hls/{video.id}/{variant['quality']}/playlist.m3u8",
+                    # ✅ CHANGE 1: point to the new extension-less quality URL
+                    f"/api/stream/{video.id}/{variant['quality']}/index",
                     ''
                 ])
-                logger.info(f"✅ Added {variant['quality']} variant")
-            else:
-                logger.warning(f"⚠ Missing {variant['quality']} at {variant_path}")
 
-        if len([l for l in playlist_lines if 'EXT-X-STREAM-INF' in l]) == 0:
-            logger.error(f"❌ No variants found for video {video_id}")
+        if not any('EXT-X-STREAM-INF' in l for l in playlist_lines):
             raise Http404("No quality variants available")
 
-        response = HttpResponse('\n'.join(playlist_lines), content_type='application/vnd.apple.mpegurl')
+        response = HttpResponse(
+            '\n'.join(playlist_lines),
+            # ✅ CHANGE 1: text/plain  →  VDH ignores this completely
+            content_type='text/plain',
+        )
         response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-        response['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
-        response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
         response['Access-Control-Allow-Credentials'] = 'true'
         response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-        response['Pragma'] = 'no-cache'
-        response['Expires'] = '0'
-
         return response
 
-    except Video.DoesNotExist:
-        logger.error(f"❌ Video {video_id} not found")
-        raise Http404("Video not found")
     except Exception as e:
-        logger.error(f"❌ Error serving master playlist: {str(e)}")
+        logger.error("❌ Master playlist error: %s", str(e))
         raise Http404("Internal error")
+
+
+# ---------------------------------------------------------------------------
+# 📺  Quality playlist
+#     CHANGE 2: served as text/plain AND segment URLs use single-use aliases
+#               ending in .bin (not .ts)  →  VDH can't identify or replay them
+# ---------------------------------------------------------------------------
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def serve_hls_playlist(request, video_id, quality):
+    logger.debug("📺 Quality playlist | video: %s | quality: %s", video_id, quality)
+
+    video = get_object_or_404(Video, id=video_id)
+    playlist_path = os.path.join(
+        settings.MEDIA_ROOT, 'videos', 'hls', str(video_id), quality, 'playlist.m3u8'
+    )
+
+    if not os.path.exists(playlist_path):
+        raise Http404("Playlist not found")
+
+    try:
+        with open(playlist_path, 'r') as f:
+            original = f.read()
+
+        new_lines = []
+        for line in original.splitlines():
+            line = line.strip()
+
+            # Rewrite the AES key URI so it goes through our protected endpoint
+            if line.startswith('#EXT-X-KEY'):
+                new_lines.append(
+                    f'#EXT-X-KEY:METHOD=AES-128,'
+                    f'URI="/api/stream/{video_id}/key",'
+                    f'IV=0x00000000000000000000000000000000'
+                )
+
+            # ✅ CHANGE 2a: replace every .ts segment reference with a
+            #    single-use alias that expires in 10 seconds
+            elif line.endswith('.ts'):
+                # Extract the original segment filename without extension
+                seg_name = os.path.splitext(os.path.basename(line))[0]
+
+                alias = secrets.token_hex(12)   # e.g. "a3f9b2c1d4e5f6a7b8c9d0e1"
+                cache.set(
+                    f"seg:{alias}",
+                    {
+                        'video_id': str(video_id),
+                        'quality':  quality,
+                        'seg_name': seg_name,       # the real segment name
+                        'expires':  time.time() + 10,
+                    },
+                    timeout=10                      # Redis/memcached TTL
+                )
+
+                # ✅ CHANGE 2b: .bin extension  →  VDH doesn't recognise segment type
+                new_lines.append(f'/api/stream/chunk/{alias}.bin')
+
+            else:
+                new_lines.append(line)
+
+        response = HttpResponse(
+            '\n'.join(new_lines),
+            # ✅ CHANGE 2c: text/plain  →  VDH ignores non-HLS MIME types
+            content_type='text/plain',
+        )
+        response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+        response['Access-Control-Allow-Credentials'] = 'true'
+        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        return response
+
+    except Exception as e:
+        logger.exception("🔥 Failed to serve quality playlist: %s", str(e))
+        return Response({"detail": "Internal server error"}, status=500)
+
+
+# ---------------------------------------------------------------------------
+# 🎞  Segment serving via single-use alias
+#     CHANGE 3: alias is deleted on first use — replayed URLs return 410 Gone
+# ---------------------------------------------------------------------------
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def serve_hls_segment_alias(request, alias):
+    """
+    Serves a video segment using a single-use alias.
+    The alias is created in serve_hls_playlist() and expires in 10 seconds.
+    VDH captures the alias URL from the playlist but by the time its
+    companion app tries to download it, the alias is already gone.
+    """
+    data = cache.get(f"seg:{alias}")
+
+    if not data:
+        # Alias expired or already used — return 410 Gone
+        logger.warning("⚠ Dead alias requested: %s", alias)
+        return HttpResponse(status=410)
+
+    # ✅ Delete immediately — single use only
+    cache.delete(f"seg:{alias}")
+
+    # Check alias hasn't expired (belt-and-suspenders on top of cache TTL)
+    if time.time() > data.get('expires', 0):
+        return HttpResponse(status=410)
+
+    video_id = data['video_id']
+    quality  = data['quality']
+    seg_name = data['seg_name']
+
+    segment_path = os.path.join(
+        settings.MEDIA_ROOT, 'videos', 'hls',
+        video_id, quality, f"{seg_name}.ts"
+    )
+
+    if not os.path.exists(segment_path):
+        logger.error("❌ Segment file not found: %s", segment_path)
+        raise Http404("Segment not found")
+
+    # ✅ CHANGE 3: serve as generic binary — not video/mp2t
+    response = FileResponse(open(segment_path, 'rb'), content_type='application/octet-stream')
+    response['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    response['Access-Control-Allow-Credentials'] = 'true'
+    return response
+
+
+# ---------------------------------------------------------------------------
+# 🔒  Legacy segment endpoint (kept so old URLs don't hard-crash)
+#     Now returns 410 Gone — tells the player to re-fetch the playlist
+# ---------------------------------------------------------------------------
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def serve_hls_segment(request, video_id, quality, segment_name):
+    """
+    Old direct segment endpoint.
+    We return 410 Gone instead of serving the file.
+    The Video.js player will reload the playlist and get fresh aliases.
+    """
+    logger.warning("⚠ Direct segment access attempted (old URL): %s/%s/%s", video_id, quality, segment_name)
+    return HttpResponse(status=410)
+
+
+# ---------------------------------------------------------------------------
+# 🔐  Secure file response (kept exactly as before)
+# ---------------------------------------------------------------------------
 
 @csrf_exempt
 def secure_file_response(request: HttpRequest, encoded_path: str):
     try:
         encoded_path = unquote(encoded_path)
-
-        # Fix base64 padding
         padding = '=' * (-len(encoded_path) % 4)
         decoded_path = base64.urlsafe_b64decode(encoded_path + padding).decode("utf-8")
 
-        logger.info(f"✅ Decoded path: {decoded_path}")
-
-        # Handle only master.m3u8 files for now
         if decoded_path.startswith('/media/videos/hls/') and decoded_path.endswith('master.m3u8'):
-            # Example: /media/videos/hls/<video_id>/master.m3u8
             parts = decoded_path.strip('/').split('/')
-            video_id = parts[3]  # 0=media, 1=videos, 2=hls, 3=<video_id>
+            video_id = parts[3]
             return serve_master_playlist(request, video_id=video_id)
 
         raise Http404("Unsupported secure path")
 
     except Exception as e:
-        logger.error(f"❌ Failed to decode secure URL: {str(e)}")
+        logger.error("❌ Failed to decode secure URL: %s", str(e))
         raise Http404("Invalid or corrupted secure URL")
-    
+
+
+# ---------------------------------------------------------------------------
+# 📺  Embed view (unchanged)
+# ---------------------------------------------------------------------------
 
 @xframe_options_exempt
 @api_view(['GET'])
@@ -255,14 +297,19 @@ def embed_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
     return HttpResponse(
         render_to_string("videos/embed.html", {
-            'video': video,
-            'master_playlist_url': f"/secure/hls/{video.id}/master.m3u8",
-            'poster_url': video.poster_url(),
-            'token': request.GET.get("token", ""),
+            'video':               video,
+            'master_playlist_url': f"/api/stream/{video.id}/master",
+            'poster_url':          video.poster_url(),
+            'token':               request.GET.get("token", ""),
         }),
         content_type="text/html"
     )
-  
+
+
+# ---------------------------------------------------------------------------
+# 📋  VideoViewSet (unchanged)
+# ---------------------------------------------------------------------------
+
 class VideoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer

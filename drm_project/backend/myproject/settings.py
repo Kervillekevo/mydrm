@@ -27,6 +27,11 @@ INSTALLED_APPS = [
     'channels',
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
