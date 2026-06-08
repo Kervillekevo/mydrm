@@ -20,7 +20,7 @@ export default function VideoPlayer({ videoId, title }) {
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
 
-  // ✅ NEW master URL — no .m3u8, VDH won't detect it
+
   const masterUrl = (id) => `${BASE_URL}/api/stream/${id}/master`;
 
   const fetchVideo = useCallback(async () => {
@@ -37,7 +37,7 @@ export default function VideoPlayer({ videoId, title }) {
         throw new Error('HLS not ready yet');
       }
 
-      // ✅ Always use the new clean URL — ignore hls_url from API
+      
       setHlsUrl(masterUrl(videoId));
       setStatus(data.status);
     } catch (err) {
@@ -59,8 +59,7 @@ export default function VideoPlayer({ videoId, title }) {
       html5: {
         vhs: {
           overrideNative: true,
-          // ✅ Tell Video.js to accept any MIME type for our playlists
-          // because we now serve them as text/plain
+    
           handleManifestRedirects: true,
         },
       },
@@ -70,8 +69,7 @@ export default function VideoPlayer({ videoId, title }) {
 
     player.src({
       src:  url,
-      // ✅ Force the player to treat the response as HLS
-      // regardless of the Content-Type header we send
+
       type: 'application/x-mpegURL',
     });
 
@@ -88,19 +86,18 @@ export default function VideoPlayer({ videoId, title }) {
     return player;
   };
 
-  // Initial fetch
+
   useEffect(() => {
     fetchVideo();
   }, [fetchVideo]);
 
-  // Initialise player once URL is known
+
   useEffect(() => {
     if (hlsUrl && !playerRef.current) {
       initPlayer(hlsUrl);
     }
   }, [hlsUrl]);
 
-  // Poll for status changes (e.g. 240p → ready)
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -119,7 +116,7 @@ export default function VideoPlayer({ videoId, title }) {
             const currentTime = player.currentTime();
             const wasPaused   = player.paused();
 
-            // Add cache-buster so the player re-fetches fresh aliases
+        
             player.src({ src: `${masterUrl(videoId)}?t=${Date.now()}`, type: 'application/x-mpegURL' });
 
             player.one('loadedmetadata', () => {
@@ -136,7 +133,7 @@ export default function VideoPlayer({ videoId, title }) {
     return () => clearInterval(interval);
   }, [videoId, status]);
 
-  // Cleanup
+  
   useEffect(() => {
     const videoEl = videoRef.current;
     const noCtx   = (e) => e.preventDefault();

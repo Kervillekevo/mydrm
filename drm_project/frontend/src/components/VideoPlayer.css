@@ -1,9 +1,9 @@
-/* --- Hide Big Center Play Button --- */
+
 .video-js .vjs-big-play-button {
   display: none !important;
 }
 
-/* --- Control Bar Styling --- */
+
 .video-js .vjs-control-bar {
   display: flex !important;
   flex-wrap: nowrap;
@@ -16,7 +16,6 @@
   justify-content: flex-start;
 }
 
-/* --- Buttons --- */
 .video-js .vjs-control {
   display: flex;
   flex: 0 0 auto;
@@ -37,7 +36,7 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* --- Quality Selector Button (Gear + Quality Label) --- */
+
 .vjs-hls-quality-selector.vjs-menu-button {
   display: flex !important;
   align-items: center !important;
@@ -52,17 +51,16 @@
   gap: 4px;
 }
 
-/* Gear icon (restore icon appearance) */
 .vjs-hls-quality-selector .vjs-icon-placeholder:before {
-  font-family: "VideoJS"; /* Required for default icons to work */
-  content: ""; /* Remove gear icon */
+  font-family: "VideoJS"; 
+  content: "";
   font-size: 16px;
   color: white;
   display: inline-block;
   vertical-align: middle;
 }
 
-/* Selected Quality Text */
+
 .vjs-hls-quality-selector .vjs-menu-button-value {
   display: inline-block !important;
   font-size: 13px;
@@ -72,12 +70,11 @@
   padding-left: 4px;
 }
 
-/* Hide the arrow icon that Video.js adds */
 .vjs-hls-quality-selector .vjs-icon-placeholder + .vjs-icon-placeholder {
   display: none !important;
 }
 
-/* Force the gear icon and quality text to stay inline */
+
 .vjs-hls-quality-selector.vjs-menu-button.vjs-control {
   display: flex !important;
   align-items: center !important;
@@ -86,14 +83,14 @@
   width: auto !important;
   gap: 6px !important;
 }
-/* --- Progress Bar --- */
+
 .video-js .vjs-progress-control {
   flex: 1 1 auto;
   min-width: 60px;
   margin: 0 8px;
 }
 
-/* --- Time Display --- */
+
 .video-js .vjs-current-time,
 .video-js .vjs-duration {
   flex: 0 0 auto;
@@ -103,7 +100,6 @@
   margin: 0 3px;
 }
 
-/* Volume / Fullscreen / PiP Tweaks */
 .video-js .vjs-volume-panel {
   display: flex;
   align-items: center;

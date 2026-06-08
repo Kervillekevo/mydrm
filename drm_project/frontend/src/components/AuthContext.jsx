@@ -30,10 +30,10 @@ export function AuthProvider({ children }) {
         if (res.ok) {
           const data = await res.json();
           setUser(data);
-          console.log('✅ Profile loaded successfully');
+          console.log('Profile loaded successfully');
         } else {
-          // Clear invalid token
-          console.log('❌ Invalid token, clearing authentication...');
+      
+          console.log('Invalid token, clearing authentication...');
           setUser(null);
           setToken(null);
           localStorage.removeItem('token');
@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
       } catch (error) {
         console.error('Profile fetch error:', error);
         setUser(null);
-        // Don't clear token on network errors, only on auth errors
+        
       } finally {
         setLoading(false);
       }
@@ -64,7 +64,7 @@ export function AuthProvider({ children }) {
 
         setToken(authToken);
         localStorage.setItem('token', authToken);
-        console.log('✅ Login successful');
+        console.log('Login successful');
       } else {
         alert('Invalid credentials');
       }
@@ -106,11 +106,11 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Always clear local state regardless of server response
+    
       localStorage.removeItem('token');
       setToken(null);
       setUser(null);
-      console.log('✅ Logged out successfully');
+      console.log('Logged out successfully');
     }
   };
 
@@ -214,7 +214,7 @@ export function AuthProvider({ children }) {
         setUser(data);
       } else {
         setUser(null);
-        // If profile reload fails, token might be invalid
+    
         if (res.status === 401) {
           setToken(null);
           localStorage.removeItem('token');
@@ -226,7 +226,6 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Helper function to check if user is authenticated
   const isAuthenticated = () => {
     return !!(token && user);
   };

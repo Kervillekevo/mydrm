@@ -172,7 +172,7 @@ export default function Navbar() {
           <div className="modal-content">
             <h2>Edit Profile</h2>
 
-            {/* ✅ Always show avatar if no profile photo */}
+        
             <img
               src={!removePhoto ? (user.profile_photo || '/avatar.png') : '/avatar.png'}
               alt="Profile"
