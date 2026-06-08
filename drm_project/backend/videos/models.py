@@ -28,8 +28,8 @@ class Video(models.Model):
 
     uploaded_file = models.FileField(upload_to=video_upload_path)
 
-    hls_output_dir = models.CharField(max_length=500, blank=True)  # relative path
-    aes_key_path = models.CharField(max_length=500, blank=True)    # relative path
+    hls_output_dir = models.CharField(max_length=500, blank=True)
+    aes_key_path = models.CharField(max_length=500, blank=True) 
 
     STATUS_CHOICES = [
         ('uploaded', 'Uploaded'),
@@ -45,14 +45,14 @@ class Video(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def poster_url(self):
-        # If you have a real generated poster path, use that
+        
         poster_path = f"videos/thumbnails/{self.id}.jpg"  
         abs_path = os.path.join(settings.MEDIA_ROOT, poster_path)
 
         if os.path.exists(abs_path):
             return settings.MEDIA_URL + poster_path
         
-        # Fallback to a default static image
+    
         return static("images/default-poster.jpg")
 
     def __str__(self):
@@ -78,7 +78,7 @@ class Video(models.Model):
         Delete video files, HLS output (and all .key files in HLS tree), AES key, and original folder.
         """
 
-        # 1. Delete original folder
+    
         if self.uploaded_file:
             try:
                 folder_path = os.path.dirname(self.uploaded_file.path)
@@ -87,16 +87,16 @@ class Video(models.Model):
             except Exception as e:
                 print(f"⚠ Could not delete original folder for Video {self.id}: {e}")
 
-        # 2. Delete HLS output folder for this video
+
         if self.hls_output_dir:
             hls_abs_path = os.path.join(settings.MEDIA_ROOT, self.hls_output_dir)
             if os.path.exists(hls_abs_path):
                 try:
                     shutil.rmtree(hls_abs_path)
                 except Exception as e:
-                    print(f"⚠ Could not delete HLS folder for Video {self.id}: {e}")
+                    print(f"Could not delete HLS folder for Video {self.id}: {e}")
 
-        # 2b. Remove ALL .key files anywhere inside the global HLS folder
+
         hls_root_path = os.path.join(settings.MEDIA_ROOT, "videos", "hls")
         if os.path.exists(hls_root_path):
             for root, dirs, files in os.walk(hls_root_path):
@@ -105,9 +105,9 @@ class Video(models.Model):
                         try:
                             os.remove(os.path.join(root, file))
                         except Exception as e:
-                            print(f"⚠ Could not delete leftover HLS key {file}: {e}")
+                            print(f"Could not delete leftover HLS key {file}: {e}")
 
-        # 3. Delete AES key file in the separate keys folder
+
         if self.aes_key_path:
             aes_abs_path = os.path.join(settings.MEDIA_ROOT, self.aes_key_path)
             if os.path.exists(aes_abs_path):
