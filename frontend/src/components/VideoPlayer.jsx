@@ -18,21 +18,12 @@ export default function VideoPlayer({ video }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔑 Fetch ONLY the stream token
   const fetchStreamToken = async () => {
-
-    const res = await fetch(
-      `${BASE_URL}/videos/${video.id}/stream-token/`,
-    );
-
-    if (!res.ok) {
-      throw new Error('Failed to obtain stream token');
-    }
-
+    const res = await fetch(`${BASE_URL}/videos/${video.id}/stream-token/`);
+    if (!res.ok) throw new Error('Failed to obtain stream token');
     return (await res.text()).trim();
   };
 
-  // 🎬 Initialize Video.js
   const initPlayer = (hlsUrl) => {
     if (!videoRef.current) return;
 
@@ -50,14 +41,12 @@ export default function VideoPlayer({ video }) {
     });
 
     playerRef.current = player;
-
-    player.src({
-      src: hlsUrl,
-      type: 'application/x-mpegURL',
-    });
+    player.src({ src: hlsUrl, type: 'application/x-mpegURL' });
 
     player.ready(() => {
-      player.hlsQualitySelector({ displayCurrentQuality: true });
+      if (!player.controlBar.getChild('QualitySelector')) {
+        player.hlsQualitySelector({ displayCurrentQuality: true });
+      }
       setLoading(false);
     });
 
@@ -66,7 +55,6 @@ export default function VideoPlayer({ video }) {
     });
   };
 
-  // ▶️ Start secure playback
   useEffect(() => {
     if (!video?.id) return;
 
@@ -76,14 +64,12 @@ export default function VideoPlayer({ video }) {
       try {
         const streamToken = await fetchStreamToken();
         if (!mounted) return;
-
-        const hlsUrl =
-          `${BASE_URL}/videos/secure/hls/${video.id}/master.m3u8?token=${streamToken}`;
-
+        const hlsUrl = `${BASE_URL}/videos/media/${video.id}/manifest?token=${streamToken}`;
         initPlayer(hlsUrl);
       } catch (err) {
         console.error(err);
         setError('Unable to start secure playback');
+        setLoading(false);
       }
     };
 
@@ -98,19 +84,12 @@ export default function VideoPlayer({ video }) {
     };
   }, [video?.id]);
 
-  // ❌ Disable right-click
   useEffect(() => {
     const videoEl = videoRef.current;
-    const disableContextMenu = (e) => e.preventDefault();
-
-    if (videoEl) {
-      videoEl.addEventListener('contextmenu', disableContextMenu);
-    }
-
+    const noCtx = (e) => e.preventDefault();
+    if (videoEl) videoEl.addEventListener('contextmenu', noCtx);
     return () => {
-      if (videoEl) {
-        videoEl.removeEventListener('contextmenu', disableContextMenu);
-      }
+      if (videoEl) videoEl.removeEventListener('contextmenu', noCtx);
     };
   }, []);
 
@@ -118,27 +97,16 @@ export default function VideoPlayer({ video }) {
     <div className="video-wrapper">
       <div className="video-container">
         <div data-vjs-player>
-          <video
-            ref={videoRef}
-            className="video-js vjs-default-skin"
-            playsInline
-          />
+          <video ref={videoRef} className="video-js vjs-default-skin" playsInline />
         </div>
       </div>
 
-      {loading && (
-        <div className="video-loading">
-          Loading secure stream…
-        </div>
-      )}
+      {loading && <div className="video-loading">Loading secure stream...</div>}
 
       {error && (
         <div className="video-error">
-          ⚠ {error}
-          <button
-            onClick={() => window.location.reload()}
-            className="retry-button"
-          >
+          {error}
+          <button onClick={() => window.location.reload()} className="retry-button">
             Retry
           </button>
         </div>

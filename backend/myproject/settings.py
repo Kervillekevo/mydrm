@@ -1,11 +1,15 @@
 from pathlib import Path
+from dotenv import load_dotenv
 import os
+import mimetypes
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-2qv9zap9zr7#&=v&hs-i@0w*+qj=vr$zb7kddz40#w#b@hw$r%'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key')
 
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     "5.189.188.88",
@@ -20,11 +24,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'corsheaders',  
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-
     'users',
     'videos',
     'django_q',
@@ -33,17 +35,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',  
-
-    'corsheaders.middleware.CorsMiddleware',                
-     'django.middleware.csrf.CsrfViewMiddleware',            
-
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -64,7 +63,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -76,58 +74,47 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 LANGUAGE_CODE = 'en-us'
-
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 STATIC_URL = 'static/'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://5.189.188.88",
 ]
 CORS_ALLOW_CREDENTIALS = False
+
 CSRF_TRUSTED_ORIGINS = [
     "http://5.189.188.88",
 ]
-SITE_BASE_URL = 'http://5.189.188.88'
-SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
+SITE_BASE_URL = os.environ.get('SITE_BASE_URL', 'http://localhost:3000')
+
+ALLOWED_EMBED_ORIGINS = [
+    "http://localhost",
+    "http://127.0.0.1",
+    "http://5.189.188.88",
+]
+
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 X_FRAME_OPTIONS = "ALLOWALL"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 SECURE_CROSS_ORIGIN_EMBEDDER_POLICY = "require-corp"
-
-
 SECURE_CONTENT_TYPE_NOSNIFF = True
-
 CORS_ALLOW_ALL_ORIGINS = False
 
-CSRF_COOKIE_HTTPONLY = False 
+CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SAMESITE = 'None'
-
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
@@ -137,7 +124,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',
     ],
 }
 
@@ -177,38 +164,35 @@ LOGGING = {
     },
 }
 
-
 Q_CLUSTER = {
     'name': 'mydrm',
-    'workers': 1, 
+    'workers': 1,
     'recycle': 500,
     'timeout': 3600,
     'retry': 3600,
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default',
-      'worker_class': 'q.cluster.ThreadWorker',
-    'save_limit': 250, 
-    'catch_up': False,  
+    'worker_class': 'q.cluster.ThreadWorker',
+    'save_limit': 250,
+    'catch_up': False,
 }
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1048576000
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB
-FILE_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
 
-
-
-# ✅ Use Gmail SMTP backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER', '')
 
-EMAIL_HOST_USER = 'kelvinngui00@gmail.com' 
-EMAIL_HOST_PASSWORD = 'tssf uoui fmat muwc'  
-
-DEFAULT_FROM_EMAIL = 'kelvinngui00@gmail.com'
-# ✅ Ensure .ts files are served with the correct MIME type
-import mimetypes
 mimetypes.add_type("video/mp2t", ".ts", True)
-

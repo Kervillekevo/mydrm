@@ -96,10 +96,9 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             uidb64 = urlsafe_base64_encode(smart_bytes(user.pk))
             token = PasswordResetTokenGenerator().make_token(user)
 
-            reset_url = f"http://5.189.188.88/reset-password/{uidb64}/{token}/"
+            reset_url = f"{settings.SITE_BASE_URL}/reset-password/{uidb64}/{token}/"
 
-            #  Debug: print to console to confirm
-            print('✅ RESET URL:', reset_url)
+            
 
             
             send_mail(

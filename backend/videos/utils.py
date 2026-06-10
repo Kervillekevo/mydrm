@@ -137,8 +137,7 @@ def process_video(video_id):
 
     key_info_path = os.path.join(hls_output_dir, f"{video.id}.keyinfo")
 
-    key_url = f"/videos/secure/hls/{video.id}.key?token=REPLACE_ME"
-
+    key_url = f"/videos/media/{video.id}/key?token=REPLACE_ME"
     with open(key_info_path, "w") as f:
         f.write(
             f"{key_url}\n"

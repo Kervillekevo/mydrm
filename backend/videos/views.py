@@ -1,11 +1,13 @@
 import os
 import logging
-import mimetypes
+import time
+import secrets
 
 from django.conf import settings
 from django.http import HttpResponse, FileResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
+from django.core.cache import cache
 
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework import viewsets
@@ -22,9 +24,7 @@ from .security import (
 
 logger = logging.getLogger(__name__)
 
-# =========================
-# NO CACHE HEADERS
-# =========================
+
 def disable_cache(response):
     response["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     response["Pragma"] = "no-cache"
@@ -33,9 +33,6 @@ def disable_cache(response):
     return response
 
 
-# =========================
-# STREAM TOKEN (LEGACY)
-# =========================
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([AllowAny])
@@ -49,9 +46,6 @@ def serve_stream_token(request, video_id):
     return disable_cache(HttpResponse(token, content_type="text/plain"))
 
 
-# =========================
-# AES KEY
-# =========================
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([AllowAny])
@@ -77,59 +71,51 @@ def serve_aes_key(request, video_id):
     return disable_cache(response)
 
 
-# =========================
-# HLS SEGMENT
-# =========================
+@api_view(["GET"])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def serve_hls_segment_alias(request, alias):
+    data = cache.get(f"seg:{alias}")
+
+    if not data:
+        return HttpResponse(status=410)
+
+    cache.delete(f"seg:{alias}")
+
+    if time.time() > data.get("expires", 0):
+        return HttpResponse(status=410)
+
+    video_id = data["video_id"]
+    quality = data["quality"]
+    seg_name = data["seg_name"]
+
+    segment_path = os.path.join(
+        settings.MEDIA_ROOT,
+        "videos",
+        "hls",
+        video_id,
+        quality,
+        seg_name,
+    )
+
+    if not os.path.exists(segment_path):
+        raise Http404("Segment not found")
+
+    response = FileResponse(
+        open(segment_path, "rb"),
+        content_type="application/octet-stream",
+        as_attachment=False,
+    )
+    return disable_cache(response)
+
+
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([AllowAny])
 def serve_hls_segment(request, video_id, quality, segment_name):
-    token = request.GET.get("token")
-    ip = request.META.get("REMOTE_ADDR", "")
-
-    segment_name = os.path.basename(segment_name)
-
-    if not validate_stream_token(
-        token=token,
-        video_id=str(video_id),
-        resource_type="segment",
-        resource_name=segment_name,
-        request=request,
-    ):
-        raise Http404("Invalid token")
-
-    if not acquire_segment_slot(ip, str(video_id)):
-        return HttpResponse("Too many concurrent segments", status=429)
-
-    try:
-        segment_path = os.path.join(
-            settings.MEDIA_ROOT,
-            "videos",
-            "hls",
-            str(video_id),
-            quality,
-            segment_name,
-        )
-
-        if not os.path.exists(segment_path):
-            raise Http404("Segment not found")
-
-        mime_type, _ = mimetypes.guess_type(segment_path)
-
-        response = FileResponse(
-            open(segment_path, "rb"),
-            content_type=mime_type or "video/MP2T",
-            as_attachment=False,
-        )
-        return disable_cache(response)
-
-    finally:
-        release_segment_slot(ip, str(video_id))
+    return HttpResponse(status=410)
 
 
-# =========================
-# VARIANT PLAYLIST
-# =========================
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([AllowAny])
@@ -172,34 +158,34 @@ def serve_hls_playlist(request, video_id, quality):
                 request=request,
                 ttl=120,
             )
-            rewritten.append(stripped.replace("__TOKEN__", key_token))
+            new_key_line = f'#EXT-X-KEY:METHOD=AES-128,URI="/videos/media/{video_id}/key?token={key_token}",IV=0x00000000000000000000000000000000'
+            rewritten.append(new_key_line)
             continue
 
         if stripped.endswith(".ts"):
-            segment_token = generate_stream_token(
-                video_id=str(video_id),
-                resource_type="segment",
-                resource_name=stripped,
-                request=request,
-                ttl=60,
+            alias = secrets.token_hex(12)
+            cache.set(
+                f"seg:{alias}",
+                {
+                    "video_id": str(video_id),
+                    "quality": quality,
+                    "seg_name": stripped,
+                    "expires": time.time() + 10,
+                },
+                timeout=10,
             )
-            rewritten.append(
-                f"/videos/secure/hls/{video_id}/{quality}/{stripped}?token={segment_token}"
-            )
+            rewritten.append(f"/videos/media/chunk/{alias}.bin")
             continue
 
         rewritten.append(stripped)
 
     response = HttpResponse(
         "\n".join(rewritten),
-        content_type="application/vnd.apple.mpegurl",
+        content_type="text/plain",
     )
     return disable_cache(response)
 
 
-# =========================
-# MASTER PLAYLIST
-# =========================
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([AllowAny])
@@ -228,30 +214,25 @@ def serve_master_playlist(request, video_id):
             )
             lines.extend([
                 f"#EXT-X-STREAM-INF:BANDWIDTH={bw},RESOLUTION={res}",
-                f"/videos/secure/hls/{video_id}/{quality}/playlist.m3u8?token={variant_token}",
+                f"/videos/media/{video_id}/{quality}/data?token={variant_token}",
             ])
 
     return disable_cache(HttpResponse(
         "\n".join(lines),
-        content_type="application/vnd.apple.mpegurl",
+        content_type="text/plain",
     ))
 
 
-# =========================
-# EMBED (LOCKED)
-# =========================
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([AllowAny])
 def embed_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
 
-    allowed_origins = [
-        "http://localhost",
-        "http://127.0.0.1",
-        "http://5.189.188.88",
-    ]
-
+    allowed_origins = getattr(settings, "ALLOWED_EMBED_ORIGINS", [
+    "http://localhost",
+    "http://127.0.0.1",
+])
     referer = request.META.get("HTTP_REFERER", "")
     origin = request.META.get("HTTP_ORIGIN", "")
 
@@ -266,7 +247,7 @@ def embed_video(request, video_id):
     )
 
     master_url = request.build_absolute_uri(
-        f"/videos/secure/hls/{video.id}/master.m3u8?token={token}"
+        f"/videos/media/{video.id}/manifest?token={token}"
     )
 
     html = render_to_string(
@@ -281,10 +262,7 @@ def embed_video(request, video_id):
     return disable_cache(HttpResponse(html, content_type="text/html"))
 
 
-# =========================
-# API VIEWSET
-# =========================
 class VideoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Video.objects.filter(status="ready")
     serializer_class = VideoSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
