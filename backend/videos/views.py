@@ -236,7 +236,9 @@ def embed_video(request, video_id):
     referer = request.META.get("HTTP_REFERER", "")
     origin = request.META.get("HTTP_ORIGIN", "")
 
-    if not any(o in (referer + origin) for o in allowed_origins):
+    if referer == "" and origin == "":
+        pass
+    elif not any(o in (referer + origin) for o in allowed_origins):
         raise Http404("Invalid embed origin")
 
     token = generate_stream_token(

@@ -98,10 +98,12 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 SITE_BASE_URL = os.environ.get('SITE_BASE_URL', 'http://localhost:3000')
-
+BACKEND_BASE_URL = os.environ.get('BACKEND_BASE_URL', 'http://127.0.0.1:8000')
 ALLOWED_EMBED_ORIGINS = [
     "http://localhost",
     "http://127.0.0.1",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
     "http://5.189.188.88",
 ]
 

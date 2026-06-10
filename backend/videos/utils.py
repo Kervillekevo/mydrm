@@ -10,9 +10,7 @@ from videos.models import Video
 logger = logging.getLogger(__name__)
 
 
-# ======================
-# PATCH PLAYLIST TOKENS
-# ======================
+
 def patch_hls_tokens(hls_root):
     """
     Replace FFmpeg placeholders with a neutral marker.
@@ -26,16 +24,14 @@ def patch_hls_tokens(hls_root):
                 with open(path, "r") as f:
                     content = f.read()
 
-                # Keep placeholder — DO NOT inject real tokens here
+                
                 content = content.replace("REPLACE_ME", "__TOKEN__")
 
                 with open(path, "w") as f:
                     f.write(content)
 
 
-# ======================
-# MASTER PLAYLIST
-# ======================
+
 def rebuild_master_playlist(video: Video):
     output_dir = os.path.join(settings.MEDIA_ROOT, video.hls_output_dir)
     master_path = os.path.join(output_dir, "master.m3u8")
@@ -61,9 +57,6 @@ def rebuild_master_playlist(video: Video):
         f.write("\n".join(lines))
 
 
-# ======================
-# ENCODER
-# ======================
 def encode_rendition(r, input_file, hls_output_dir, key_info_path):
     try:
         rendition_dir = os.path.join(hls_output_dir, r["name"])
@@ -88,7 +81,7 @@ def encode_rendition(r, input_file, hls_output_dir, key_info_path):
             "-hls_time", "6",
             "-hls_playlist_type", "vod",
 
-            # 🔥 THIS IS THE FIX
+    
             "-start_number", "0",
             
             "-hls_segment_filename",
@@ -112,9 +105,7 @@ def encode_rendition(r, input_file, hls_output_dir, key_info_path):
         return False, r["name"]
 
 
-# ======================
-# MAIN PIPELINE
-# ======================
+
 def process_video(video_id):
     video = Video.objects.get(id=video_id)
     video.status = "processing"
@@ -168,7 +159,7 @@ def process_video(video_id):
 
     patch_hls_tokens(hls_output_dir)
 
-    # SAVE PATHS FIRST
+
     video.hls_output_dir = f"videos/hls/{video.id}"
     video.aes_key_path = f"videos/keys/{video.id}.key"
     video.status = "ready"

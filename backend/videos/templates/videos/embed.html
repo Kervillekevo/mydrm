@@ -6,7 +6,7 @@
   <title>{{ video.title }}</title>
   <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
   <style>
-    /* Reset */
+  
     *, *::before, *::after {
       box-sizing: border-box;
     }
@@ -18,17 +18,17 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       flex-direction: column;
-      align-items: center; /* centers container horizontally */
+      align-items: center;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* New container to hold video and title aligned left */
+ 
     #container {
       display: flex;
       flex-direction: column;
-      align-items: flex-start; /* aligns children left */
+      align-items: flex-start;
       width: 100%;
       max-width: 900px;
     }
@@ -42,7 +42,7 @@
       position: relative;
     }
 
-    /* Video.js player will take full width and keep 16:9 */
+  
     #video-player {
       width: 100% !important;
       height: auto !important;
@@ -51,7 +51,7 @@
       display: block;
     }
 
-    /* Title below the player */
+
     #video-title {
       margin-top: 1rem;
       font-weight: 600;
@@ -62,7 +62,7 @@
       padding-left: 4px;
     }
 
-    /* Responsive tweaks */
+
     @media (max-width: 768px) {
       body {
         padding: 1rem 0.5rem;
@@ -82,17 +82,17 @@
       }
     }
 
-    /* Hide the big red play button (the center big play) */
+
     .vjs-big-play-button {
       display: none !important;
     }
 
-    /* Control bar tweaks for horizontal volume icon */
+
     .vjs-volume-panel {
-      flex-direction: row !important; /* force horizontal layout */
+      flex-direction: row !important;
     }
 
-    /* Optional: smaller volume slider for compactness */
+
     .vjs-volume-control.vjs-control {
       max-width: 90px !important;
     }
@@ -109,7 +109,7 @@
         preload="auto"
         playsinline
         webkit-playsinline
-       
+  
       ></video>
     </div>
 
@@ -151,7 +151,7 @@
   player.hlsQualitySelector &&
     player.hlsQualitySelector({ displayCurrentQuality: true });
 
-  // Disable right click
+
   player.ready(() => {
     player.el().addEventListener('contextmenu', e => e.preventDefault());
   });

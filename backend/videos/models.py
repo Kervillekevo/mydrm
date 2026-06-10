@@ -56,7 +56,7 @@ class Video(models.Model):
         return reverse("video-embed", kwargs={"video_id": self.id})
 
     def embed_code(self):
-        base_url = getattr(settings, "SITE_BASE_URL", "http://localhost:3000")
+        base_url = getattr(settings, "BACKEND_BASE_URL", "http://localhost:8000")
         embed_url = f"{base_url}{self.get_embed_url()}"
         return (
             f"<iframe "

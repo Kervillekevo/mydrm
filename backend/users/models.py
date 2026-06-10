@@ -16,8 +16,6 @@ class Profile(models.Model):
         return f"{self.user.username}'s Profile"
 # Create your models here.
 
-
-    # ✅ Signal to auto-create Profile when User is created
 @receiver(post_save, sender=User)
 def create_or_save_user_profile(sender, instance, created, **kwargs):
     if created:

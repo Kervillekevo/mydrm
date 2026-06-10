@@ -47,7 +47,7 @@ class VideoAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         if obj.status == 'uploaded' and obj.uploaded_file:
             async_task('videos.tasks.process_video_task', obj.id)
-            self.message_user(request, f"✅ Video {obj.id} queued for processing!")
+            self.message_user(request, f"Video {obj.id} queued for processing!")
 
     def video_preview(self, obj):
         if obj.uploaded_file:
@@ -62,7 +62,7 @@ class VideoAdmin(admin.ModelAdmin):
 
     def stream_link(self, obj):
         if obj.status == 'ready':
-            url = obj.hls_master_playlist_url()
+            url = f"/videos/media/{obj.id}/manifest"
             return mark_safe(f'<a href="{url}" target="_blank">{url}</a>')
         return "Not ready yet."
 
@@ -70,7 +70,7 @@ class VideoAdmin(admin.ModelAdmin):
 
     def aes_key_link(self, obj):
         if obj.status == 'ready':
-            url = obj.aes_key_url()
+            url = f"/videos/media/{obj.id}/key"
             return mark_safe(f'<a href="{url}" target="_blank">{url}</a>')
         return "Not ready yet."
 
@@ -80,7 +80,7 @@ class VideoAdmin(admin.ModelAdmin):
         if obj.status != 'ready':
             return "Embed available when video is ready."
 
-        base_url = getattr(settings, "SITE_BASE_URL", "http://localhost:8000")
+        base_url = getattr(settings, "BACKEND_BASE_URL", "http://localhost:8000")
         embed_url = f"{base_url}{obj.get_embed_url()}"
 
         return mark_safe(

@@ -8,17 +8,13 @@ from django.conf import settings
 from django.core.cache import cache
 
 
-# =========================
-# BASE TTLs (seconds)
-# =========================
-PLAYLIST_TTL = 60      # master + variant playlists
-SEGMENT_TTL = 10       # .ts files
-KEY_TTL = 6            # AES keys
+
+PLAYLIST_TTL = 60
+SEGMENT_TTL = 10
+KEY_TTL = 6
 
 
-# =========================
-# RATE LIMIT CONFIG
-# =========================
+
 SEGMENT_RATE_LIMIT = 30
 SEGMENT_RATE_WINDOW = 2
 
@@ -26,9 +22,6 @@ KEY_RATE_LIMIT = 6
 KEY_RATE_WINDOW = 5
 
 
-# =========================
-# CONCURRENCY
-# =========================
 MAX_CONCURRENT_SEGMENTS = 4
 
 
@@ -62,7 +55,7 @@ def _fingerprint(request):
 
 
 def _ttl(resource_type: str, issued_at: int) -> int:
-    jitter = issued_at % 5  # prevents replay timing predictability
+    jitter = issued_at % 5
     base = {
         "playlist": PLAYLIST_TTL,
         "segment": SEGMENT_TTL,
@@ -71,9 +64,6 @@ def _ttl(resource_type: str, issued_at: int) -> int:
     return base + jitter
 
 
-# =========================
-# RATE LIMITING
-# =========================
 def check_rate_limit(ip: str, key: str, limit: int, window: int) -> bool:
     cache_key = f"rate:{ip}:{key}"
 
@@ -86,9 +76,6 @@ def check_rate_limit(ip: str, key: str, limit: int, window: int) -> bool:
     return count <= limit
 
 
-# =========================
-# CONCURRENCY
-# =========================
 def acquire_segment_slot(ip: str, video_id: str) -> bool:
     key = f"concurrent:{ip}:{video_id}"
 
@@ -112,9 +99,7 @@ def release_segment_slot(ip: str, video_id: str):
         pass
 
 
-# =========================
-# SEGMENT ORDER PROTECTION
-# =========================
+
 def validate_segment_order(ip: str, video_id: str, segment_name: str) -> bool:
     """
     Allows small jumps (adaptive bitrate) but blocks bulk download.
@@ -135,9 +120,6 @@ def validate_segment_order(ip: str, video_id: str, segment_name: str) -> bool:
     return True
 
 
-# =========================
-# TOKEN GENERATION
-# =========================
 def generate_stream_token(*, video_id, resource_type, resource_name="", request, ttl=None):
     issued_at = int(time.time())
     ip, ua, session = _fingerprint(request)
@@ -160,9 +142,7 @@ def generate_stream_token(*, video_id, resource_type, resource_name="", request,
     return f"{issued_at}:{nonce}:{signature}"
 
 
-# =========================
-# TOKEN VALIDATION
-# =========================
+
 def validate_stream_token(*, token, video_id, resource_type, resource_name="", request):
     try:
         issued_at, nonce, signature = token.split(":")
@@ -173,7 +153,7 @@ def validate_stream_token(*, token, video_id, resource_type, resource_name="", r
             return False
 
         if not cache.get(f"nonce:{signature}"):
-            return False  # replay detected
+            return False
 
         ip, ua, session = _fingerprint(request)
 
