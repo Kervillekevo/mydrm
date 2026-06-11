@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
@@ -18,11 +18,11 @@ export default function VideoPlayer({ video }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchStreamToken = async () => {
+  const fetchStreamToken = useCallback(async () => {
     const res = await fetch(`${BASE_URL}/videos/${video.id}/stream-token/`);
     if (!res.ok) throw new Error('Failed to obtain stream token');
     return (await res.text()).trim();
-  };
+  }, [video.id]);
 
   const initPlayer = (hlsUrl) => {
     if (!videoRef.current) return;
@@ -82,7 +82,7 @@ export default function VideoPlayer({ video }) {
         playerRef.current = null;
       }
     };
-  }, [video?.id]);
+  }, [video?.id, fetchStreamToken]);
 
   useEffect(() => {
     const videoEl = videoRef.current;
