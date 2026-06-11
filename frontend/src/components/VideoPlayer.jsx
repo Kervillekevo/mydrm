@@ -13,11 +13,6 @@ export default function VideoPlayer({ video }) {
   const playerRef = useRef(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const fetchStreamToken = async () => {
-    const res = await fetch(`${BASE_URL}/videos/${video.id}/stream-token/`);
-    if (!res.ok) throw new Error('Failed to obtain stream token');
-    return (await res.text()).trim();
-  };
   const initPlayer = (hlsUrl) => {
     if (!videoRef.current) return;
     const player = videojs(videoRef.current, {
@@ -44,10 +39,14 @@ export default function VideoPlayer({ video }) {
       setError(player.error()?.message || 'Playback error');
     });
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!video?.id) return;
     let mounted = true;
+    const fetchStreamToken = async () => {
+      const res = await fetch(`${BASE_URL}/videos/${video.id}/stream-token/`);
+      if (!res.ok) throw new Error('Failed to obtain stream token');
+      return (await res.text()).trim();
+    };
     const startPlayback = async () => {
       try {
         const streamToken = await fetchStreamToken();
