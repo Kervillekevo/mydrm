@@ -15,6 +15,8 @@ ALLOWED_HOSTS = [
     "5.189.188.88",
     "localhost",
     "127.0.0.1",
+    "mydrm-production.up.railway.app",
+    
 ]
 
 INSTALLED_APPS = [
@@ -90,11 +92,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://5.189.188.88",
+    "https://mydrm-production.up.railway.app",
 ]
 CORS_ALLOW_CREDENTIALS = False
 
 CSRF_TRUSTED_ORIGINS = [
     "http://5.189.188.88",
+    "https://mydrm-production.up.railway.app",
 ]
 
 SITE_BASE_URL = os.environ.get('SITE_BASE_URL', 'http://localhost:3000')
@@ -105,6 +109,7 @@ ALLOWED_EMBED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
     "http://5.189.188.88",
+    "https://mydrm-production.up.railway.app",
 ]
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
