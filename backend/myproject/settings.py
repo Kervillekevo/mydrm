@@ -93,23 +93,27 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://5.189.188.88",
     "https://mydrm-production.up.railway.app",
+    "https://mydrm.vercel.app",
 ]
 CORS_ALLOW_CREDENTIALS = False
 
 CSRF_TRUSTED_ORIGINS = [
     "http://5.189.188.88",
     "https://mydrm-production.up.railway.app",
+    "https://mydrm.vercel.app",
 ]
 
 SITE_BASE_URL = os.environ.get('SITE_BASE_URL', 'http://localhost:3000')
 BACKEND_BASE_URL = os.environ.get('BACKEND_BASE_URL', 'http://127.0.0.1:8000')
 ALLOWED_EMBED_ORIGINS = [
-    "http://localhost",
+    "http://localhost",git add .
+    
     "http://127.0.0.1",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
     "http://5.189.188.88",
     "https://mydrm-production.up.railway.app",
+    "https://mydrm.vercel.app",
 ]
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
