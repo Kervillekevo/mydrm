@@ -50,6 +50,16 @@ def serve_stream_token(request, video_id):
 @authentication_classes([])
 @permission_classes([AllowAny])
 def serve_aes_key(request, video_id):
+    token = request.GET.get("token")
+
+    if not validate_stream_token(
+        token=token,
+        video_id=str(video_id),
+        resource_type="key",
+        request=request,
+    ):
+        raise Http404("Invalid token")
+
     key_path = os.path.join(
         settings.MEDIA_ROOT, "videos", "keys", f"{video_id}.key"
     )
@@ -57,7 +67,10 @@ def serve_aes_key(request, video_id):
     if not os.path.exists(key_path):
         raise Http404("Key not found")
 
-    response = FileResponse(open(key_path, "rb"), content_type="application/octet-stream")
+    response = FileResponse(
+        open(key_path, "rb"),
+        content_type="application/octet-stream",
+    )
     return disable_cache(response)
 
 
@@ -70,8 +83,9 @@ def serve_hls_segment_alias(request, alias):
     if not data:
         return HttpResponse(status=410)
 
+    cache.delete(f"seg:{alias}")
+
     if time.time() > data.get("expires", 0):
-        cache.delete(f"seg:{alias}")
         return HttpResponse(status=410)
 
     video_id = data["video_id"]
@@ -141,7 +155,16 @@ def serve_hls_playlist(request, video_id, quality):
         stripped = line.strip()
 
         if stripped.startswith("#EXT-X-KEY"):
-            new_key_line = f'#EXT-X-KEY:METHOD=AES-128,URI="/videos/media/{video_id}/key",IV=0x00000000000000000000000000000000'
+            key_token = generate_stream_token(
+                video_id=str(video_id),
+                resource_type="key",
+                request=request,
+                ttl=120,
+            )
+            new_key_line = (
+                f'#EXT-X-KEY:METHOD=AES-128,URI="/videos/media/{video_id}/key?token={key_token}",'
+                f"IV=0x00000000000000000000000000000000"
+            )
             rewritten.append(new_key_line)
             continue
 
@@ -153,9 +176,9 @@ def serve_hls_playlist(request, video_id, quality):
                     "video_id": str(video_id),
                     "quality": quality,
                     "seg_name": stripped,
-                    "expires": time.time() + 200,
+                    "expires": time.time() + 10,
                 },
-                timeout=200,
+                timeout=10,
             )
             rewritten.append(f"/videos/media/chunk/{alias}.bin")
             continue
@@ -174,7 +197,10 @@ def serve_hls_playlist(request, video_id, quality):
 @permission_classes([AllowAny])
 def serve_master_playlist(request, video_id):
     base_path = os.path.join(
-        settings.MEDIA_ROOT, "videos", "hls", str(video_id)
+        settings.MEDIA_ROOT,
+        "videos",
+        "hls",
+        str(video_id),
     )
 
     variants = [
@@ -195,15 +221,19 @@ def serve_master_playlist(request, video_id):
                 request=request,
                 ttl=120,
             )
-            lines.extend([
-                f"#EXT-X-STREAM-INF:BANDWIDTH={bw},RESOLUTION={res}",
-                f"/videos/media/{video_id}/{quality}/data?token={variant_token}",
-            ])
+            lines.extend(
+                [
+                    f"#EXT-X-STREAM-INF:BANDWIDTH={bw},RESOLUTION={res}",
+                    f"/videos/media/{video_id}/{quality}/data?token={variant_token}",
+                ]
+            )
 
-    return disable_cache(HttpResponse(
-        "\n".join(lines),
-        content_type="text/plain",
-    ))
+    return disable_cache(
+        HttpResponse(
+            "\n".join(lines),
+            content_type="text/plain",
+        )
+    )
 
 
 @api_view(["GET"])
@@ -212,10 +242,15 @@ def serve_master_playlist(request, video_id):
 def embed_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
 
-    allowed_origins = getattr(settings, "ALLOWED_EMBED_ORIGINS", [
-    "http://localhost",
-    "http://127.0.0.1",
-])
+    allowed_origins = getattr(
+        settings,
+        "ALLOWED_EMBED_ORIGINS",
+        [
+            "http://localhost",
+            "http://127.0.0.1",
+        ],
+    )
+
     referer = request.META.get("HTTP_REFERER", "")
     origin = request.META.get("HTTP_ORIGIN", "")
 
