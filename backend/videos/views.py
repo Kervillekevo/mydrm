@@ -70,9 +70,8 @@ def serve_hls_segment_alias(request, alias):
     if not data:
         return HttpResponse(status=410)
 
-    cache.delete(f"seg:{alias}")
-
     if time.time() > data.get("expires", 0):
+        cache.delete(f"seg:{alias}")
         return HttpResponse(status=410)
 
     video_id = data["video_id"]
