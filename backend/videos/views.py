@@ -154,9 +154,9 @@ def serve_hls_playlist(request, video_id, quality):
                     "video_id": str(video_id),
                     "quality": quality,
                     "seg_name": stripped,
-                    "expires": time.time() + 10,
+                    "expires": time.time() + 200,
                 },
-                timeout=10,
+                timeout=200,
             )
             rewritten.append(f"/videos/media/chunk/{alias}.bin")
             continue
