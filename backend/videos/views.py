@@ -50,16 +50,6 @@ def serve_stream_token(request, video_id):
 @authentication_classes([])
 @permission_classes([AllowAny])
 def serve_aes_key(request, video_id):
-    token = request.GET.get("token")
-
-    if not validate_stream_token(
-        token=token,
-        video_id=str(video_id),
-        resource_type="key",
-        request=request,
-    ):
-        raise Http404("Invalid token")
-
     key_path = os.path.join(
         settings.MEDIA_ROOT, "videos", "keys", f"{video_id}.key"
     )
@@ -152,13 +142,7 @@ def serve_hls_playlist(request, video_id, quality):
         stripped = line.strip()
 
         if stripped.startswith("#EXT-X-KEY"):
-            key_token = generate_stream_token(
-                video_id=str(video_id),
-                resource_type="key",
-                request=request,
-                ttl=120,
-            )
-            new_key_line = f'#EXT-X-KEY:METHOD=AES-128,URI="/videos/media/{video_id}/key?token={key_token}",IV=0x00000000000000000000000000000000'
+            new_key_line = f'#EXT-X-KEY:METHOD=AES-128,URI="/videos/media/{video_id}/key",IV=0x00000000000000000000000000000000'
             rewritten.append(new_key_line)
             continue
 
