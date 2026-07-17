@@ -13,10 +13,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
-    "5.189.188.88",
     "localhost",
     "127.0.0.1",
-    "mydrm-production.up.railway.app",
+    *[h for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h],
 ]
 
 INSTALLED_APPS = [
@@ -81,6 +80,7 @@ else:
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+FFMATE_URL = os.environ.get('FFMATE_URL', 'http://localhost:8001')
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -102,16 +102,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://5.189.188.88",
-    "https://mydrm-production.up.railway.app",
-    "https://mydrm.vercel.app",
+    *[o for o in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if o],
 ]
 CORS_ALLOW_CREDENTIALS = False
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://5.189.188.88",
-    "https://mydrm-production.up.railway.app",
-    "https://mydrm.vercel.app",
+    *[o for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o],
 ]
 
 SITE_BASE_URL = os.environ.get('SITE_BASE_URL', 'http://localhost:3000')
@@ -122,9 +118,7 @@ ALLOWED_EMBED_ORIGINS = [
     "http://127.0.0.1",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
-    "http://5.189.188.88",
-    "https://mydrm-production.up.railway.app",
-    "https://mydrm.vercel.app",
+    *[o for o in os.environ.get('ALLOWED_EMBED_ORIGINS', '').split(',') if o],
 ]
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
@@ -204,8 +198,12 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1048576000
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 

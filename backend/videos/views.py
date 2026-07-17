@@ -2,6 +2,7 @@ import os
 import logging
 import time
 import secrets
+from .utils import patch_hls_tokens, rebuild_master_playlist
 
 from django.conf import settings
 from django.http import HttpResponse, FileResponse, Http404
@@ -83,9 +84,8 @@ def serve_hls_segment_alias(request, alias):
     if not data:
         return HttpResponse(status=410)
 
-    cache.delete(f"seg:{alias}")
-
     if time.time() > data.get("expires", 0):
+        cache.delete(f"seg:{alias}")
         return HttpResponse(status=410)
 
     video_id = data["video_id"]
@@ -176,9 +176,9 @@ def serve_hls_playlist(request, video_id, quality):
                     "video_id": str(video_id),
                     "quality": quality,
                     "seg_name": stripped,
-                    "expires": time.time() + 10,
+                    "expires": time.time() + 600,
                 },
-                timeout=10,
+                timeout=600,
             )
             rewritten.append(f"/videos/media/chunk/{alias}.bin")
             continue
@@ -280,6 +280,53 @@ def embed_video(request, video_id):
     )
 
     return disable_cache(HttpResponse(html, content_type="text/html"))
+
+
+@api_view(["POST"])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def ffmate_webhook(request):
+    data = request.data
+
+    if data.get("event") != "task.updated":
+        return HttpResponse(status=200)
+
+    task = data.get("data", {})
+    status = task.get("status")
+
+    logger.info(f"FFmate webhook: event={data.get('event')} status={status} metadata={task.get('metadata')}")
+
+    if status not in ("finished", "DONE_SUCCESSFUL"):
+        return HttpResponse(status=200)
+
+    metadata = task.get("metadata", {})
+    video_id = metadata.get("video_id")
+    rendition = metadata.get("rendition")
+
+    if not video_id:
+        return HttpResponse(status=200)
+
+    cache_key = f"ffmate_renditions:{video_id}"
+    finished = cache.get(cache_key) or []
+    finished.append(rendition)
+    cache.set(cache_key, finished, timeout=3600)
+
+    logger.info(f"Video {video_id} rendition {rendition} finished. Done: {finished}")
+
+    if len(finished) >= 4:
+        try:
+            video = Video.objects.get(id=video_id)
+            hls_root = os.path.join(settings.MEDIA_ROOT, "videos", "hls", video_id)
+            patch_hls_tokens(hls_root)
+            rebuild_master_playlist(video)
+            video.status = "ready"
+            video.save(update_fields=["status"])
+            cache.delete(cache_key)
+            logger.info(f"Video {video_id} fully ready via FFmate")
+        except Video.DoesNotExist:
+            logger.error(f"Video {video_id} not found")
+
+    return HttpResponse(status=200)
 
 
 class VideoViewSet(viewsets.ReadOnlyModelViewSet):
